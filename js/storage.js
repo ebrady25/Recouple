@@ -94,14 +94,16 @@ const Storage = (() => {
 
   /**
    * Check which game number should be played next.
-   * Returns 1, 2, or 3 (or 0 if all done).
+   * Testing mode: always returns next available game (unlimited).
+   * Returns 1+ (cycles through games, never returns 0).
    */
   function getNextGameNumber(date) {
     const progress = getDailyProgress(date);
     if (!progress.game1.completed) return 1;
     if (!progress.game2.completed) return 2;
     if (!progress.game3.completed) return 3;
-    return 0; // all done
+    // Testing mode: allow unlimited replays — cycle back to 1
+    return 1;
   }
 
   // ─── Statistics ───
