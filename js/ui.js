@@ -90,15 +90,18 @@ const UI = (() => {
         const colors = getAvatarColor(c.name);
         const photoPath = `images/contestants/${c.id}.jpg`;
         const rarity = RARITY[c.stars];
+        const flag = c.show === 'uk' ? '🇬🇧' : '🇺🇸';
+        const seasonShort = c.season.replace('USA ', '').replace('UK ', '');
         return `<div class="draft-card ${rarity.cls} ${i === selectedDraftIndex ? 'selected' : ''}" data-draft="${i}">
-          <div class="card-rarity-badge">${c.starPoints}pt</div>
+          <div class="card-season-line"><span class="flag">${flag}</span> ${seasonShort}</div>
           <div class="card-avatar" style="background:linear-gradient(135deg,${colors[0]},${colors[1]})">
             <img src="${photoPath}" alt="${c.name}" loading="lazy"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <span class="initials">${getInitials(c.name)}</span>
           </div>
           <div class="card-name">${c.name}</div>
-          <div class="card-stars">${rarity.label}</div>
+          <div class="card-stars">${'★'.repeat(c.stars)}<span class="star-empty">${'☆'.repeat(4 - c.stars)}</span></div>
+          <div class="card-points">${c.starPoints}pt</div>
           <div class="card-tags">${renderTags(getVisibleTags(c.tags))}</div>
         </div>`;
       }).join('');
