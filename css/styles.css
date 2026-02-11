@@ -154,3 +154,29 @@ body {
   #board-container { height: 370px; }
   .board-cell { width: 90px; height: 96px; }
 }
+
+/* ═══ PERCENTAGE DISPLAY ═══ */
+.score-main { display: flex; align-items: baseline; gap: 8px; }
+.score-pct { font-size: 16px; font-weight: 800; padding: 2px 8px; border-radius: 8px; }
+.pct-perfect { color: var(--gold); background: rgba(255,215,0,0.15); }
+.pct-great { color: var(--green); background: rgba(46,213,115,0.12); }
+.pct-good { color: var(--text); background: rgba(255,255,255,0.08); }
+.pct-low { color: var(--red); background: rgba(255,71,87,0.1); }
+
+.completion-pct { font-size: 20px; font-weight: 800; margin: 4px 0 2px; }
+.completion-optimal { font-size: 12px; color: var(--text-dim); margin-bottom: 10px; }
+
+/* ═══ WILD SLOT ═══ */
+.cell-wild { border-style: dotted !important; border-color: rgba(255,255,255,0.2) !important; }
+.cell-wild .cell-slot-emoji { opacity: 0.6; }
+.board-cell.cell-valid.rarity-bronze[data-slot="2"],
+.board-cell.cell-valid.rarity-bronze[data-slot="5"],
+.board-cell.cell-valid.rarity-silver[data-slot="2"],
+.board-cell.cell-valid.rarity-silver[data-slot="5"],
+.board-cell.cell-valid.rarity-gold[data-slot="2"],
+.board-cell.cell-valid.rarity-gold[data-slot="5"],
+.board-cell.cell-valid.rarity-diamond[data-slot="2"],
+.board-cell.cell-valid.rarity-diamond[data-slot="5"] {
+  border-style: dotted;
+  border-color: rgba(255,255,255,0.25) !important;
+}
