@@ -245,13 +245,15 @@ const Scoring = (() => {
   }
 
   /**
-   * Check for perfect grid bonus (all 12 cells filled).
+   * Check for perfect grid bonus (all 12 cells filled AND all valid).
    */
   function calculatePerfectGridBonus(board) {
-    const isPerfect = board.every(cell => cell !== null);
+    const allFilled = board.every(cell => cell !== null);
+    if (!allFilled) return { total: 0, isPerfect: false };
+    const allValid = board.every((cell, index) => isValidPlacement(cell, index));
     return {
-      total: isPerfect ? PERFECT_GRID_BONUS : 0,
-      isPerfect
+      total: allValid ? PERFECT_GRID_BONUS : 0,
+      isPerfect: allValid
     };
   }
 
