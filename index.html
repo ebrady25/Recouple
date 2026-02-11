@@ -6,207 +6,54 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#764ba2">
-  <title>Recouple - Love Island Grid Game</title>
+  <meta name="description" content="Daily Love Island contestant draft puzzle game">
+  <title>Recouple</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" sizes="192x192" href="images/icons/icon-192.png">
   <link rel="apple-touch-icon" href="images/icons/icon-192.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div id="app">
 
-    <!-- ═══ HEADER ═══ -->
-    <header id="header">
-      <div class="header-top">
-        <h1 class="logo">💕 Recouple</h1>
-        <div class="header-actions">
-          <button id="btn-help-mode" class="icon-btn" aria-label="Toggle hints">💡</button>
-          <button id="btn-stats" class="icon-btn" aria-label="Statistics">📊</button>
-          <button id="btn-help" class="icon-btn" aria-label="How to play">❓</button>
-        </div>
-      </div>
-      <div class="header-meta">
-        <div class="game-tabs" id="game-tabs">
-          <button class="game-tab active" data-game="1">Game 1</button>
-          <button class="game-tab locked" data-game="2">Game 2 🔒</button>
-          <button class="game-tab locked" data-game="3">Game 3 🔒</button>
-        </div>
-      </div>
-      <div class="stats-bar" id="stats-bar">
-        <span class="stat" id="stat-round">Round 1/12</span>
-        <span class="stat-divider">•</span>
-        <span class="stat" id="stat-score">Score: 0</span>
-        <span class="stat-divider">•</span>
-        <span class="stat" id="stat-drafted">Drafted: 0/12</span>
-      </div>
-    </header>
-
-    <!-- ═══ DRAFT CONTAINER ═══ -->
-    <section id="draft-container" class="draft-container">
-      <h2 class="draft-title" id="draft-title">🃏 Round 1 — Pick a Contestant</h2>
-      <div class="draft-cards" id="draft-cards">
-        <!-- Cards injected by JS -->
-      </div>
-      <button id="btn-confirm" class="btn-confirm" disabled>Confirm Pick</button>
-    </section>
-
-    <!-- ═══ OPTIMIZATION BANNER ═══ -->
-    <section id="optimize-banner" class="optimize-banner hidden">
-      <div class="optimize-content">
-        <h2>🎯 Optimization Phase</h2>
-        <p>Tap any two tiles to swap them. Maximize your score!</p>
-      </div>
-      <button id="btn-finish" class="btn-finish">Finish & Score →</button>
-    </section>
-
-    <!-- ═══ GAME BOARD ═══ -->
-    <section id="board-section" class="board-section">
-      <div class="board-wrapper">
-        <!-- Column headers -->
-        <div class="board-header">
-          <div class="corner-cell"></div>
-          <div class="col-label">👑<br><span>Winner</span></div>
-          <div class="col-label">💑<br><span>Coupled</span></div>
-          <div class="col-label">🏠<br><span>Casa</span></div>
-          <div class="col-label" id="col4-label">🔄<br><span>Loading...</span></div>
-        </div>
-        <!-- Grid rows -->
-        <div class="board-row" data-row="0">
-          <div class="row-label">🇺🇸<br><span>USA</span></div>
-          <div class="cell" data-index="0"></div>
-          <div class="cell" data-index="1"></div>
-          <div class="cell" data-index="2"></div>
-          <div class="cell" data-index="3"></div>
-        </div>
-        <div class="board-row" data-row="1">
-          <div class="row-label">🇬🇧<br><span>UK</span></div>
-          <div class="cell" data-index="4"></div>
-          <div class="cell" data-index="5"></div>
-          <div class="cell" data-index="6"></div>
-          <div class="cell" data-index="7"></div>
-        </div>
-        <div class="board-row" data-row="2">
-          <div class="row-label">🏆<br><span>Finale</span></div>
-          <div class="cell" data-index="8"></div>
-          <div class="cell" data-index="9"></div>
-          <div class="cell" data-index="10"></div>
-          <div class="cell" data-index="11"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ SCORE BREAKDOWN ═══ -->
-    <section id="score-panel" class="score-panel">
-      <div class="score-row">
-        <span class="score-label">⭐ Base Points</span>
-        <span class="score-value" id="score-base">0</span>
-      </div>
-      <div class="score-row">
-        <span class="score-label">💕 Couple Bonus</span>
-        <span class="score-value" id="score-couples">0</span>
-      </div>
-      <div class="score-row">
-        <span class="score-label">🏝️ Season Bonus</span>
-        <span class="score-value" id="score-seasons">0</span>
-      </div>
-      <div class="score-row">
-        <span class="score-label">📊 Row/Col Bonus</span>
-        <span class="score-value" id="score-completion">0</span>
-      </div>
-      <div class="score-row">
-        <span class="score-label">✨ Perfect Grid</span>
-        <span class="score-value" id="score-perfect">0</span>
-      </div>
-      <div class="score-row total">
-        <span class="score-label">TOTAL</span>
-        <span class="score-value" id="score-total">0</span>
-      </div>
-    </section>
-
-    <!-- ═══ COMPLETED OVERLAY ═══ -->
-    <div id="complete-overlay" class="overlay hidden">
-      <div class="overlay-card">
-        <h2>🎉 Game Complete!</h2>
-        <div class="final-score" id="final-score">0</div>
-        <div class="final-label">points</div>
-        <div id="final-breakdown" class="final-breakdown"></div>
-        <div class="overlay-actions">
-          <button id="btn-share" class="btn-primary">📋 Share Results</button>
-          <button id="btn-next-game" class="btn-secondary">Next Game →</button>
-        </div>
-        <div id="share-toast" class="share-toast hidden">Copied to clipboard!</div>
-      </div>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="app-title">💕 Recouple</div>
+    <div id="header-info" class="header-info">Loading...</div>
+    <div class="header-buttons">
+      <button id="btn-hints" class="header-btn" title="Toggle Hints">💡</button>
+      <button id="btn-stats" class="header-btn" title="Statistics">📊</button>
+      <button id="btn-help" class="header-btn" title="How to Play">❓</button>
     </div>
+  </header>
 
-    <!-- ═══ STATS OVERLAY ═══ -->
-    <div id="stats-overlay" class="overlay hidden">
-      <div class="overlay-card">
-        <h2>📊 Your Stats</h2>
-        <div class="stats-grid" id="stats-grid">
-          <!-- Injected by JS -->
-        </div>
-        <button class="btn-secondary close-overlay">Close</button>
-      </div>
-    </div>
-
-    <!-- ═══ HELP OVERLAY ═══ -->
-    <div id="help-overlay" class="overlay hidden">
-      <div class="overlay-card help-card">
-        <h2>How to Play 💕</h2>
-        <div class="help-content">
-          <div class="help-section">
-            <h3>🃏 Draft Phase (12 Rounds)</h3>
-            <p>Each round, pick 1 of 3 Love Island contestants. Tap a card to select, then tap a board cell to place them. Higher stars = more points!</p>
-          </div>
-          <div class="help-section">
-            <h3>📋 The Grid</h3>
-            <p>3×4 board. Rows = show (USA, UK, Finale). Columns = trait (Winner, Coupled, Casa Amor, + a daily rotating column). A contestant scores points only if they match BOTH the row AND column.</p>
-            <p style="margin-top:6px;font-size:0.85rem;opacity:0.7">🔄 The 4th column rotates daily: S6+ → OG Era → Bombshell → Day 1</p>
-          </div>
-          <div class="help-section">
-            <h3>🔄 Inspect & Swap</h3>
-            <p>Double-tap a tile to inspect it — see all their traits and which cells they'd be valid in. Tap a tile then tap another to swap them!</p>
-          </div>
-          <div class="help-section">
-            <h3>⭐ Scoring</h3>
-            <p><strong>Base:</strong> Valid placement = star value (1/2/3/5 pts)<br>
-            <strong>💕 Couple:</strong> Real couple adjacent = +3 per person<br>
-            <strong>🏝️ Season:</strong> Same season adjacent = +1 per person<br>
-            <strong>📊 Complete:</strong> Full row = +5, full column = +5<br>
-            <strong>✨ Perfect:</strong> All 12 filled = +20 bonus</p>
-          </div>
-          <div class="help-section">
-            <h3>🎮 3 Games Per Day</h3>
-            <p>Complete Game 1 to unlock Game 2, then Game 3. Same daily puzzle for everyone!</p>
-          </div>
-        </div>
-        <button class="btn-secondary close-overlay">Got it!</button>
-      </div>
-    </div>
-
-    <!-- ═══ ALL DONE OVERLAY ═══ -->
-    <div id="alldone-overlay" class="overlay hidden">
-      <div class="overlay-card">
-        <h2>🌅 All Done Today!</h2>
-        <p>You've completed all 3 games. Come back tomorrow for new puzzles!</p>
-        <div id="today-scores" class="today-scores"></div>
-        <button class="btn-secondary close-overlay">Close</button>
-      </div>
-    </div>
-
+  <!-- Game Tabs -->
+  <div class="game-tabs">
+    <button id="tab-game-1" class="game-tab tab-active">Game 1</button>
+    <button id="tab-game-2" class="game-tab">Game 2</button>
+    <button id="tab-game-3" class="game-tab">Game 3</button>
   </div>
 
-  <!-- Canvas for confetti -->
-  <canvas id="confetti-canvas"></canvas>
+  <!-- Score Panel -->
+  <div id="score-panel"></div>
 
-  <!-- Scripts -->
+  <!-- Griddy Board -->
+  <div id="board-container"></div>
+
+  <!-- Draft / Optimize / Completion -->
+  <div id="draft-container"></div>
+
+  <!-- Scripts (order matters: dependencies first) -->
   <script src="js/scoring.js"></script>
   <script src="js/draft.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/game.js"></script>
   <script src="js/ui.js"></script>
+
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+
 </body>
 </html>
