@@ -23,6 +23,7 @@
       <div class="header-top">
         <h1 class="logo">💕 Recouple</h1>
         <div class="header-actions">
+          <button id="btn-help-mode" class="icon-btn" aria-label="Toggle hints">💡</button>
           <button id="btn-stats" class="icon-btn" aria-label="Statistics">📊</button>
           <button id="btn-help" class="icon-btn" aria-label="How to play">❓</button>
         </div>
@@ -70,7 +71,7 @@
           <div class="col-label">👑<br><span>Winner</span></div>
           <div class="col-label">💑<br><span>Coupled</span></div>
           <div class="col-label">🏠<br><span>Casa</span></div>
-          <div class="col-label">6️⃣<br><span>S6+</span></div>
+          <div class="col-label" id="col4-label">🔄<br><span>Loading...</span></div>
         </div>
         <!-- Grid rows -->
         <div class="board-row" data-row="0">
@@ -158,15 +159,16 @@
         <div class="help-content">
           <div class="help-section">
             <h3>🃏 Draft Phase (12 Rounds)</h3>
-            <p>Each round, pick 1 of 3 Love Island contestants. They're placed on the board automatically. Higher stars = more points!</p>
+            <p>Each round, pick 1 of 3 Love Island contestants. Tap a card to select, then tap a board cell to place them. Higher stars = more points!</p>
           </div>
           <div class="help-section">
             <h3>📋 The Grid</h3>
-            <p>3×4 board. Rows = show (USA, UK, Finale). Columns = trait (Winner, Coupled, Casa Amor, S6+). A contestant scores points only if they match BOTH the row AND column.</p>
+            <p>3×4 board. Rows = show (USA, UK, Finale). Columns = trait (Winner, Coupled, Casa Amor, + a daily rotating column). A contestant scores points only if they match BOTH the row AND column.</p>
+            <p style="margin-top:6px;font-size:0.85rem;opacity:0.7">🔄 The 4th column rotates daily: S6+ → OG Era → Bombshell → Day 1</p>
           </div>
           <div class="help-section">
-            <h3>🔄 Swap Anytime</h3>
-            <p>Tap any two tiles to swap them. Rearrange for the best score!</p>
+            <h3>🔄 Inspect & Swap</h3>
+            <p>Double-tap a tile to inspect it — see all their traits and which cells they'd be valid in. Tap a tile then tap another to swap them!</p>
           </div>
           <div class="help-section">
             <h3>⭐ Scoring</h3>
