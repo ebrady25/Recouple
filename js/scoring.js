@@ -1,344 +1,291 @@
 /**
- * RECOUPLE — Scoring Engine
- * =========================
- * Calculates all point values for a given board state.
- * 
- * Board is a 3×4 grid (3 rows, 4 columns):
- *   Rows:    0=LI USA, 1=LI UK, 2=Made Finale
- *   Columns: 0=Winner, 1=Coupled, 2=Casa Amor, 3=Season 6+
- * 
- * Board represented as flat array of 12 cells (row-major):
- *   [0,1,2,3, 4,5,6,7, 8,9,10,11]
- *   Each cell is null (empty) or a drafted contestant object:
- *   { ...contestantData, stars: 1-4, starPoints: 1/2/3/5 }
+ * RECOUPLE v2 — Griddy Scoring Engine
+ * =====================================
+ * 9-card board with Griddy-style topology.
+ * Each slot has ONE trait requirement.
+ * Scoring is connection-focused with rarity as bonus.
+ *
+ * Board: flat array of 9 cells, each null or a drafted contestant.
+ *
+ * Layout (visual positions):
+ *        [0]────[1]          ← Top pair
+ *       / \    / \
+ *     [2] [3]──[4] [5]      ← Sides + Center pair
+ *       \ / \  / \ /
+ *       [6]  [8]  [7]       ← Bottom + Bottom-center
+ *         \   |   /
+ *          \  |  /
+ *           [8]              ← (connected to 6 and 7)
  */
 
 const Scoring = (() => {
 
-  // Grid dimensions
-  const ROWS = 3;
-  const COLS = 4;
+  // ═══ BOARD TOPOLOGY ═══
+  const NUM_SLOTS = 9;
 
-  // Row criteria tags
-  const ROW_TAGS = ['usa', 'uk', 'finale'];
-
-  // Column criteria tags — first 3 are fixed, 4th rotates daily
-  const FIXED_COL_TAGS = ['winner', 'coupled', 'casa'];
-  
-  // Rotating 4th column options
-  const ROTATING_COLUMNS = [
-    { tag: 'season6', label: 'S6+', emoji: '6️⃣', description: 'Season 6 or later' },
-    { tag: 'og_era',  label: 'OG Era', emoji: '🕰️', description: 'Seasons 1-5' },
-    { tag: 'bombshell', label: 'Bombshell', emoji: '💣', description: 'Entered mid-season' },
-    { tag: 'day1', label: 'Day 1', emoji: '☀️', description: 'Original islander' }
+  // Edges: each pair of connected slot indices
+  const EDGES = [
+    [0, 1],   // top pair
+    [0, 2],   // top-left to left-side
+    [0, 3],   // top-left to center-left
+    [1, 4],   // top-right to center-right
+    [1, 5],   // top-right to right-side
+    [3, 4],   // center pair (QB-QB connection)
+    [3, 2],   // center-left to left-side
+    [4, 5],   // center-right to right-side
+    [3, 6],   // center-left to bottom-left
+    [3, 8],   // center-left to bottom-center
+    [4, 7],   // center-right to bottom-right
+    [4, 8],   // center-right to bottom-center
+    [2, 6],   // left-side to bottom-left
+    [5, 7],   // right-side to bottom-right
+    [6, 8],   // bottom-left to bottom-center
+    [7, 8],   // bottom-right to bottom-center
   ];
 
-  // Active column config — set by setDailyColumn()
-  let activeCol4 = ROTATING_COLUMNS[0];
-  let COL_TAGS = ['winner', 'coupled', 'casa', 'season6'];
+  // Precomputed adjacency list
+  const ADJACENCY = Array.from({ length: NUM_SLOTS }, () => []);
+  for (const [a, b] of EDGES) {
+    ADJACENCY[a].push(b);
+    ADJACENCY[b].push(a);
+  }
+
+  // ═══ SLOT DEFINITIONS ═══
+  // Each slot has one required trait. 8 fixed + 1 rotating daily.
+  const FIXED_SLOTS = [
+    { index: 0, tag: 'usa',      label: 'USA',       emoji: '🇺🇸' },
+    { index: 1, tag: 'uk',       label: 'UK',        emoji: '🇬🇧' },
+    { index: 2, tag: 'winner',   label: 'Winner',    emoji: '👑' },
+    { index: 3, tag: 'coupled',  label: 'Coupled',   emoji: '💑' },
+    { index: 4, tag: 'day1',     label: 'Day 1',     emoji: '☀️' },
+    { index: 5, tag: 'bombshell',label: 'Bombshell',  emoji: '💣' },
+    { index: 6, tag: 'og_era',   label: 'OG Era',    emoji: '🕰️' },
+    { index: 7, tag: 'season6',  label: 'S6+',       emoji: '6️⃣' },
+  ];
+
+  // Slot 8 (bottom-center, 4 connections) alternates daily between 2 tags
+  // (These are the only remaining tags not used by fixed slots)
+  const ROTATING_SLOTS = [
+    { tag: 'finale',    label: 'Finale',    emoji: '🏆' },
+    { tag: 'casa',      label: 'Casa Amor', emoji: '🏠' },
+  ];
+
+  // Active slot config
+  let activeSlot8 = ROTATING_SLOTS[0];
+  let SLOT_TAGS = FIXED_SLOTS.map(s => s.tag).concat(activeSlot8.tag);
+  let SLOT_LABELS = FIXED_SLOTS.map(s => ({ ...s })).concat({ index: 8, ...activeSlot8 });
 
   /**
-   * Set the rotating 4th column based on date.
-   * Cycles through 4 column types based on day-of-year.
+   * Set the rotating slot based on date.
    */
-  function setDailyColumn(date) {
+  function setDailySlots(date) {
     const d = new Date(date);
     const year = d.getFullYear();
     const dayOfYear = Math.floor((d - new Date(year, 0, 0)) / (1000 * 60 * 60 * 24));
-    const colIndex = dayOfYear % ROTATING_COLUMNS.length;
-    activeCol4 = ROTATING_COLUMNS[colIndex];
-    COL_TAGS = [...FIXED_COL_TAGS, activeCol4.tag];
-    return activeCol4;
+    const idx = dayOfYear % ROTATING_SLOTS.length;
+    activeSlot8 = ROTATING_SLOTS[idx];
+    SLOT_TAGS = FIXED_SLOTS.map(s => s.tag).concat(activeSlot8.tag);
+    SLOT_LABELS = FIXED_SLOTS.map(s => ({ ...s })).concat({ index: 8, ...activeSlot8 });
+    return activeSlot8;
   }
 
-  /**
-   * Get the current active 4th column config.
-   */
-  function getActiveColumn4() {
-    return activeCol4;
+  function getSlotLabels() {
+    return SLOT_LABELS;
   }
 
-  // Star value mapping
-  const STAR_VALUES = { 1: 1, 2: 2, 3: 3, 4: 5 };
-
-  // Bonus values
-  const COUPLE_BONUS = 3;      // per person (+6 total for a pair)
-  const SEASON_BONUS = 1;      // per person per adjacency
-  const ROW_COMPLETE_BONUS = 5;
-  const COL_COMPLETE_BONUS = 5;
-  const PERFECT_GRID_BONUS = 20;
-
-  /**
-   * Convert flat index to {row, col}
-   */
-  function indexToPos(i) {
-    return { row: Math.floor(i / COLS), col: i % COLS };
+  function getRotatingSlot() {
+    return activeSlot8;
   }
 
-  /**
-   * Convert {row, col} to flat index
-   */
-  function posToIndex(row, col) {
-    return row * COLS + col;
-  }
+  // ═══ SCORING CONSTANTS (Final Balanced — Connection-Focused) ═══
+  const SLOT_MATCH_PTS = 2;          // Contestant matches slot trait
+  const COUNTRY_MATCH_PTS = 1;       // Connected cards share country
+  const SEASON_MATCH_PTS = 1;        // Connected cards share season
+  const COUNTRY_SEASON_COMBO = 2;    // Bonus when BOTH country + season match (total = 1+1+2 = 4)
+  const COUPLE_BONUS_PTS = 4;        // Connected cards are a real couple
+  const RARITY_BASE = { 1: 0, 2: 1, 3: 2, 4: 3 };  // Star → bonus points (not the core)
+  const ALL_FILLED_BONUS = 8;        // All 9 slots filled with valid placements
+
+  // ═══ SCORING FUNCTIONS ═══
 
   /**
-   * Get orthogonal neighbors (up, down, left, right) for a flat index.
-   * Returns array of flat indices.
+   * Check if contestant matches the slot's required trait.
    */
-  function getNeighbors(index) {
-    const { row, col } = indexToPos(index);
-    const neighbors = [];
-    if (row > 0) neighbors.push(posToIndex(row - 1, col));
-    if (row < ROWS - 1) neighbors.push(posToIndex(row + 1, col));
-    if (col > 0) neighbors.push(posToIndex(row, col - 1));
-    if (col < COLS - 1) neighbors.push(posToIndex(row, col + 1));
-    return neighbors;
-  }
-
-  /**
-   * Check if a contestant is validly placed at a given position.
-   * Valid = contestant has BOTH the row tag AND the column tag.
-   */
-  function isValidPlacement(contestant, index) {
+  function isValidPlacement(contestant, slotIndex) {
     if (!contestant) return false;
-    const { row, col } = indexToPos(index);
-    const rowTag = ROW_TAGS[row];
-    const colTag = COL_TAGS[col];
-    return contestant.tags.includes(rowTag) && contestant.tags.includes(colTag);
+    return contestant.tags.includes(SLOT_TAGS[slotIndex]);
   }
 
   /**
-   * Calculate base points for a single cell.
-   * Valid placement = star value, invalid = 0.
+   * Get neighbors for a given slot index.
    */
-  function cellBasePoints(contestant, index) {
-    if (!contestant) return 0;
-    return isValidPlacement(contestant, index) ? contestant.starPoints : 0;
+  function getNeighbors(slotIndex) {
+    return ADJACENCY[slotIndex];
   }
 
   /**
-   * Find all couple bonuses on the board.
-   * A couple bonus triggers when:
-   *   1. Two contestants on the board are a real-life couple (c1.couple === c2.name)
-   *   2. They are orthogonally adjacent
-   * Returns: { total, pairs: [{ index1, index2, name1, name2 }] }
+   * Calculate the full score breakdown for a board state.
+   * Returns detailed per-cell and aggregate scoring.
    */
-  function calculateCoupleBonus(board) {
-    const pairs = [];
-    const counted = new Set(); // avoid double-counting
+  function calculateScore(board) {
+    const cellScores = [];
 
-    for (let i = 0; i < board.length; i++) {
-      const c1 = board[i];
-      if (!c1 || !c1.couple) continue;
+    for (let i = 0; i < NUM_SLOTS; i++) {
+      const c = board[i];
+      const cell = {
+        index: i,
+        contestant: c,
+        slotTag: SLOT_TAGS[i],
+        isValid: c ? isValidPlacement(c, i) : null,
+        slotPoints: 0,
+        rarityPoints: 0,
+        connectionPoints: 0,
+        couplePoints: 0,
+        totalPoints: 0,
+        connections: [],   // detailed connection info for UI
+      };
 
-      const neighbors = getNeighbors(i);
-      for (const j of neighbors) {
-        const c2 = board[j];
-        if (!c2) continue;
-        if (c1.couple === c2.name) {
-          const key = Math.min(i, j) + '-' + Math.max(i, j);
-          if (!counted.has(key)) {
-            counted.add(key);
-            pairs.push({
-              index1: i,
-              index2: j,
-              name1: c1.name,
-              name2: c2.name
-            });
+      if (!c) {
+        cellScores.push(cell);
+        continue;
+      }
+
+      // Slot match
+      if (cell.isValid) {
+        cell.slotPoints = SLOT_MATCH_PTS;
+      }
+
+      // Rarity base
+      cell.rarityPoints = RARITY_BASE[c.stars] || 0;
+
+      // Connection scoring — check each neighbor
+      const neighbors = ADJACENCY[i];
+      for (const ni of neighbors) {
+        const nc = board[ni];
+        if (!nc) continue;
+
+        const conn = { neighborIndex: ni, neighborName: nc.name, points: 0, types: [] };
+
+        const sameCountry = c.show === nc.show;
+        const sameSeason = c.season === nc.season;
+        const isCouple = (c.couple && c.couple === nc.name) || (nc.couple && nc.couple === c.name);
+
+        if (sameCountry && sameSeason) {
+          // Country + Season combo
+          conn.points += COUNTRY_MATCH_PTS + SEASON_MATCH_PTS + COUNTRY_SEASON_COMBO;
+          conn.types.push('country', 'season', 'combo');
+        } else {
+          if (sameCountry) {
+            conn.points += COUNTRY_MATCH_PTS;
+            conn.types.push('country');
+          }
+          if (sameSeason) {
+            conn.points += SEASON_MATCH_PTS;
+            conn.types.push('season');
+          }
+        }
+
+        if (isCouple) {
+          conn.points += COUPLE_BONUS_PTS;
+          conn.types.push('couple');
+        }
+
+        if (conn.points > 0) {
+          cell.connectionPoints += conn.points;
+          cell.connections.push(conn);
+        }
+      }
+
+      cell.totalPoints = cell.slotPoints + cell.rarityPoints + cell.connectionPoints + cell.couplePoints;
+      cellScores.push(cell);
+    }
+
+    // All-filled bonus
+    const allFilled = board.every(c => c !== null);
+    const allValid = allFilled && board.every((c, i) => isValidPlacement(c, i));
+    const gridBonus = allValid ? ALL_FILLED_BONUS : 0;
+
+    // Aggregate
+    const totalSlot = cellScores.reduce((s, c) => s + c.slotPoints, 0);
+    const totalRarity = cellScores.reduce((s, c) => s + c.rarityPoints, 0);
+    const totalConnections = cellScores.reduce((s, c) => s + c.connectionPoints, 0);
+    const total = cellScores.reduce((s, c) => s + c.totalPoints, 0) + gridBonus;
+
+    // Count couples found
+    const coupleEdges = [];
+    const countedCouples = new Set();
+    for (const cs of cellScores) {
+      for (const conn of cs.connections) {
+        if (conn.types.includes('couple')) {
+          const key = Math.min(cs.index, conn.neighborIndex) + '-' + Math.max(cs.index, conn.neighborIndex);
+          if (!countedCouples.has(key)) {
+            countedCouples.add(key);
+            coupleEdges.push({ index1: cs.index, index2: conn.neighborIndex });
           }
         }
       }
     }
 
     return {
-      total: pairs.length * COUPLE_BONUS * 2, // +3 per person = +6 per pair
-      pairs
-    };
-  }
-
-  /**
-   * Find all same-season adjacency bonuses.
-   * +1 per person per adjacency (so if A and B are same season and adjacent, 
-   * that's +1 for A and +1 for B = +2 total for that edge).
-   * 
-   * We count each edge once and multiply by 2.
-   * Returns: { total, edges: [{ index1, index2, season }] }
-   */
-  function calculateSeasonBonus(board) {
-    const edges = [];
-    const counted = new Set();
-
-    for (let i = 0; i < board.length; i++) {
-      const c1 = board[i];
-      if (!c1) continue;
-
-      const neighbors = getNeighbors(i);
-      for (const j of neighbors) {
-        const c2 = board[j];
-        if (!c2) continue;
-
-        const key = Math.min(i, j) + '-' + Math.max(i, j);
-        if (counted.has(key)) continue;
-        counted.add(key);
-
-        if (c1.season === c2.season) {
-          edges.push({
-            index1: i,
-            index2: j,
-            season: c1.season
-          });
-        }
-      }
-    }
-
-    return {
-      total: edges.length * SEASON_BONUS * 2, // +1 per person per edge
-      edges
-    };
-  }
-
-  /**
-   * Calculate row completion bonuses.
-   * A row is complete when all 4 columns are filled (regardless of validity).
-   * Returns: { total, completedRows: [rowIndex, ...] }
-   */
-  function calculateRowBonus(board) {
-    const completedRows = [];
-    for (let r = 0; r < ROWS; r++) {
-      let complete = true;
-      for (let c = 0; c < COLS; c++) {
-        if (!board[posToIndex(r, c)]) {
-          complete = false;
-          break;
-        }
-      }
-      if (complete) completedRows.push(r);
-    }
-    return {
-      total: completedRows.length * ROW_COMPLETE_BONUS,
-      completedRows
-    };
-  }
-
-  /**
-   * Calculate column completion bonuses.
-   * A column is complete when all 3 rows are filled.
-   * Returns: { total, completedCols: [colIndex, ...] }
-   */
-  function calculateColBonus(board) {
-    const completedCols = [];
-    for (let c = 0; c < COLS; c++) {
-      let complete = true;
-      for (let r = 0; r < ROWS; r++) {
-        if (!board[posToIndex(r, c)]) {
-          complete = false;
-          break;
-        }
-      }
-      if (complete) completedCols.push(c);
-    }
-    return {
-      total: completedCols.length * COL_COMPLETE_BONUS,
-      completedCols
-    };
-  }
-
-  /**
-   * Check for perfect grid bonus (all 12 cells filled AND all valid).
-   */
-  function calculatePerfectGridBonus(board) {
-    const allFilled = board.every(cell => cell !== null);
-    if (!allFilled) return { total: 0, isPerfect: false };
-    const allValid = board.every((cell, index) => isValidPlacement(cell, index));
-    return {
-      total: allValid ? PERFECT_GRID_BONUS : 0,
-      isPerfect: allValid
-    };
-  }
-
-  /**
-   * Calculate full score breakdown for the current board state.
-   * Returns detailed object with every component.
-   */
-  function calculateScore(board) {
-    // Base points per cell
-    const cellScores = board.map((contestant, index) => ({
-      index,
-      contestant,
-      basePoints: cellBasePoints(contestant, index),
-      isValid: contestant ? isValidPlacement(contestant, index) : null
-    }));
-
-    const baseTotal = cellScores.reduce((sum, c) => sum + c.basePoints, 0);
-
-    // Synergy bonuses
-    const couples = calculateCoupleBonus(board);
-    const seasons = calculateSeasonBonus(board);
-    const rows = calculateRowBonus(board);
-    const cols = calculateColBonus(board);
-    const perfectGrid = calculatePerfectGridBonus(board);
-
-    // Total
-    const total = baseTotal + couples.total + seasons.total + rows.total + cols.total + perfectGrid.total;
-
-    return {
       total,
-      baseTotal,
+      totalSlot,
+      totalRarity,
+      totalConnections,
+      gridBonus,
+      allFilled,
+      allValid,
       cellScores,
-      couples,
-      seasons,
-      rows,
-      cols,
-      perfectGrid
+      coupleEdges,
+      edgeCount: EDGES.length,
     };
   }
 
   /**
-   * Get per-cell bonus breakdown for UI display.
-   * Returns a Map: index -> { coupleBonus, seasonBonus, totalBonus }
+   * Get per-cell bonus summary for UI display.
    */
   function getCellBonuses(board) {
+    const score = calculateScore(board);
     const bonuses = new Map();
-    for (let i = 0; i < board.length; i++) {
-      bonuses.set(i, { coupleBonus: 0, seasonBonus: 0, couplePair: null, seasonEdges: 0 });
+    for (const cs of score.cellScores) {
+      const coupleConns = cs.connections.filter(c => c.types.includes('couple'));
+      const seasonConns = cs.connections.filter(c => c.types.includes('season') || c.types.includes('combo'));
+      bonuses.set(cs.index, {
+        coupleBonus: coupleConns.reduce((s, c) => s + COUPLE_BONUS_PTS, 0),
+        seasonBonus: seasonConns.length,
+        connectionTotal: cs.connectionPoints,
+        couplePair: coupleConns.length > 0 ? coupleConns[0].neighborName : null,
+      });
     }
-
-    const couples = calculateCoupleBonus(board);
-    for (const pair of couples.pairs) {
-      bonuses.get(pair.index1).coupleBonus += COUPLE_BONUS;
-      bonuses.get(pair.index2).coupleBonus += COUPLE_BONUS;
-      bonuses.get(pair.index1).couplePair = pair.name2;
-      bonuses.get(pair.index2).couplePair = pair.name1;
-    }
-
-    const seasons = calculateSeasonBonus(board);
-    for (const edge of seasons.edges) {
-      bonuses.get(edge.index1).seasonBonus += SEASON_BONUS;
-      bonuses.get(edge.index2).seasonBonus += SEASON_BONUS;
-      bonuses.get(edge.index1).seasonEdges++;
-      bonuses.get(edge.index2).seasonEdges++;
-    }
-
     return bonuses;
   }
 
-  // Public API
+  // ═══ PUBLIC API ═══
   return {
-    ROWS, COLS, ROW_TAGS, FIXED_COL_TAGS, ROTATING_COLUMNS, STAR_VALUES,
-    COUPLE_BONUS, SEASON_BONUS, ROW_COMPLETE_BONUS, COL_COMPLETE_BONUS, PERFECT_GRID_BONUS,
-    get COL_TAGS() { return COL_TAGS; },
-    setDailyColumn, getActiveColumn4,
-    indexToPos, posToIndex, getNeighbors,
-    isValidPlacement, cellBasePoints,
-    calculateCoupleBonus, calculateSeasonBonus,
-    calculateRowBonus, calculateColBonus, calculatePerfectGridBonus,
-    calculateScore, getCellBonuses
+    NUM_SLOTS,
+    EDGES,
+    ADJACENCY,
+    FIXED_SLOTS,
+    ROTATING_SLOTS,
+    SLOT_MATCH_PTS,
+    COUNTRY_MATCH_PTS,
+    SEASON_MATCH_PTS,
+    COUNTRY_SEASON_COMBO,
+    COUPLE_BONUS_PTS,
+    RARITY_BASE,
+    ALL_FILLED_BONUS,
+    get SLOT_TAGS() { return SLOT_TAGS; },
+    get SLOT_LABELS() { return SLOT_LABELS; },
+    setDailySlots,
+    getSlotLabels,
+    getRotatingSlot,
+    isValidPlacement,
+    getNeighbors,
+    calculateScore,
+    getCellBonuses,
   };
 
 })();
 
-// Export for Node.js testing, no-op in browser
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = Scoring;
 }
