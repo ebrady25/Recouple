@@ -1334,16 +1334,17 @@ body::before {
 
 /* Shared rarity card styles */
 .card-season-line {
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  margin-bottom: 6px;
-  font-weight: 500;
+  gap: 5px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
-.card-season-line .flag { font-size: 0.85rem; }
+.card-season-line .flag { font-size: 1rem; }
 
 .card-stars {
   font-size: 0.55rem;
