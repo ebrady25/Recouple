@@ -1,8 +1,9 @@
 /**
  * RECOUPLE — UI Controller
  * ========================
- * Draft flow: Tap card → Tap board cell to place (two intentional taps)
- * Board flow: Tap filled cell → Inspector popup with tags/traits → Swap button
+ * Draft: Tap card → Tap cell to place
+ * Board: Single-tap to select for swap. Double-tap to inspect.
+ * Placement hints: off by default, toggle with help-mode button
  */
 
 const UI = (() => {
@@ -13,6 +14,8 @@ const UI = (() => {
   let selectedDraftIndex = -1;
   let swapSourceIndex = null;
   let lastScoreTotal = 0;
+  let helpMode = false;          // Placement hint toggle
+  let lastTapTime = {};          // For double-tap detection: { cellIndex: timestamp }
 
   const AVATAR_COLORS = [
     ['#764ba2','#f093fb'],['#c94b8e','#ff6b6b'],['#667eea','#a78bfa'],
@@ -20,6 +23,14 @@ const UI = (() => {
     ['#70a1ff','#a78bfa'],['#ff4757','#ff6b9d'],['#ffd700','#ff6b6b'],
     ['#a78bfa','#c94b8e'],['#27ae60','#2ed573'],['#3498db','#70a1ff']
   ];
+
+  // Rarity design config
+  const RARITY = {
+    1: { cls: 'rarity-bronze', label: '★', accent: '#cd7f32' },
+    2: { cls: 'rarity-silver', label: '★★', accent: '#c0c0c0' },
+    3: { cls: 'rarity-gold',   label: '★★★', accent: '#ffd700' },
+    4: { cls: 'rarity-diamond',label: '★★★★', accent: '#b9f2ff' }
+  };
 
   function getAvatarColor(name) {
     let h = 0;
@@ -65,7 +76,7 @@ const UI = (() => {
       container.classList.remove('hidden');
 
       if (selectedDraftIndex >= 0) {
-        titleEl.textContent = '👇 Tap a cell to place them';
+        titleEl.textContent = '👇 Now tap a cell to place them';
         titleEl.classList.add('placing-hint');
       } else {
         titleEl.textContent = `🃏 Round ${state.round + 1} — Pick a Contestant`;
@@ -78,15 +89,16 @@ const UI = (() => {
       cardsEl.innerHTML = options.map((c, i) => {
         const colors = getAvatarColor(c.name);
         const photoPath = `images/contestants/${c.id}.jpg`;
-        return `<div class="draft-card ${i === selectedDraftIndex ? 'selected' : ''}" data-draft="${i}">
+        const rarity = RARITY[c.stars];
+        return `<div class="draft-card ${rarity.cls} ${i === selectedDraftIndex ? 'selected' : ''}" data-draft="${i}">
+          <div class="card-rarity-badge">${c.starPoints}pt</div>
           <div class="card-avatar" style="background:linear-gradient(135deg,${colors[0]},${colors[1]})">
             <img src="${photoPath}" alt="${c.name}" loading="lazy"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <span class="initials">${getInitials(c.name)}</span>
           </div>
           <div class="card-name">${c.name}</div>
-          <div class="card-stars">${renderStars(c.stars)}</div>
-          <div class="card-points">${c.starPoints} pt${c.starPoints>1?'s':''}</div>
+          <div class="card-stars">${rarity.label}</div>
           <div class="card-tags">${renderTags(getVisibleTags(c.tags))}</div>
         </div>`;
       }).join('');
@@ -100,9 +112,11 @@ const UI = (() => {
           const newIdx = parseInt(card.dataset.draft);
           selectedDraftIndex = (selectedDraftIndex === newIdx) ? -1 : newIdx;
           $$('.draft-card').forEach((c,j) => c.classList.toggle('selected', j === selectedDraftIndex));
-          updatePlacementHints();
+          if (helpMode) updatePlacementHints();
+          else clearPlacementHints();
+          // Update title
           if (selectedDraftIndex >= 0) {
-            titleEl.textContent = '👇 Tap a cell to place them';
+            titleEl.textContent = '👇 Now tap a cell to place them';
             titleEl.classList.add('placing-hint');
           } else {
             titleEl.textContent = `🃏 Round ${state.round + 1} — Pick a Contestant`;
@@ -112,7 +126,7 @@ const UI = (() => {
         });
       });
 
-      if (selectedDraftIndex >= 0) updatePlacementHints();
+      if (selectedDraftIndex >= 0 && helpMode) updatePlacementHints();
     } else {
       container.classList.add('hidden');
       selectedDraftIndex = -1;
@@ -123,7 +137,7 @@ const UI = (() => {
     const options = Game.getDraftOptions();
     $$('.cell').forEach(cellEl => {
       cellEl.classList.remove('place-hint', 'place-hint-valid', 'place-hint-invalid');
-      if (selectedDraftIndex < 0 || !options) return;
+      if (selectedDraftIndex < 0 || !options || !helpMode) return;
       const index = parseInt(cellEl.dataset.index);
       const contestant = options[selectedDraftIndex];
       const valid = Scoring.isValidPlacement(contestant, index);
@@ -146,7 +160,7 @@ const UI = (() => {
       const c = state.board[index];
       const b = bonuses.get(index);
 
-      // Preserve placement hint classes through render
+      // Preserve hints
       const hasHint = cellEl.classList.contains('place-hint');
       const hintValid = cellEl.classList.contains('place-hint-valid');
       const hintInvalid = cellEl.classList.contains('place-hint-invalid');
@@ -185,7 +199,7 @@ const UI = (() => {
     });
   }
 
-  // ═══ INSPECTOR POPUP ═══
+  // ═══ INSPECTOR POPUP (double-tap) ═══
   function showInspector(cellIndex) {
     const state = Game.getState();
     const c = state.board[cellIndex];
@@ -196,6 +210,7 @@ const UI = (() => {
     const colors = getAvatarColor(c.name);
     const photoPath = `images/contestants/${c.id}.jpg`;
     const valid = Scoring.isValidPlacement(c, cellIndex);
+    const rarity = RARITY[c.stars];
 
     const validCells = [];
     for (let i = 0; i < 12; i++) {
@@ -206,7 +221,7 @@ const UI = (() => {
     popup.id = 'inspector-popup';
     popup.className = 'inspector-popup';
     popup.innerHTML = `
-      <div class="inspector-card">
+      <div class="inspector-card ${rarity.cls}">
         <div class="inspector-header">
           <div class="inspector-avatar" style="background:linear-gradient(135deg,${colors[0]},${colors[1]})">
             <img src="${photoPath}" alt="${c.name}" loading="lazy"
@@ -215,8 +230,8 @@ const UI = (() => {
           </div>
           <div class="inspector-info">
             <div class="inspector-name">${c.name}</div>
-            <div class="inspector-season">${c.season}</div>
-            <div class="inspector-stars">${renderStars(c.stars)} · ${c.starPoints}pt${c.starPoints>1?'s':''}</div>
+            <div class="inspector-season">${c.season} · ${rarity.label}</div>
+            <div class="inspector-stars">${c.starPoints}pt${c.starPoints>1?'s':''} base</div>
           </div>
         </div>
         <div class="inspector-tags">${renderTags(c.tags)}</div>
@@ -281,10 +296,13 @@ const UI = (() => {
   }
 
   // ═══ CELL CLICK HANDLER ═══
+  // Single tap: select for swap (or place draft pick)
+  // Double tap: open inspector
   function handleCellClick(cellIndex) {
     const state = Game.getState();
+    const now = Date.now();
 
-    // MODE 1: Draft placement
+    // MODE 1: Draft placement — a draft card is selected
     if (selectedDraftIndex >= 0 && state.phase === 'drafting') {
       Game.draftToCell(selectedDraftIndex, cellIndex);
       selectedDraftIndex = -1;
@@ -293,7 +311,7 @@ const UI = (() => {
       return;
     }
 
-    // MODE 2: Swap completion
+    // MODE 2: Swap completion — a swap source is selected
     if (swapSourceIndex !== null) {
       if (swapSourceIndex !== cellIndex) {
         Game.swapCells(swapSourceIndex, cellIndex);
@@ -303,10 +321,22 @@ const UI = (() => {
       return;
     }
 
-    // MODE 3: Inspect filled cell
+    // MODE 3: Double-tap detection for inspector
     if (state.board[cellIndex] && (state.phase === 'drafting' || state.phase === 'optimizing')) {
-      showInspector(cellIndex);
-      Game.haptic('light');
+      const lastTap = lastTapTime[cellIndex] || 0;
+      const elapsed = now - lastTap;
+      lastTapTime[cellIndex] = now;
+
+      if (elapsed < 400) {
+        // Double tap → inspector
+        showInspector(cellIndex);
+        Game.haptic('medium');
+        lastTapTime[cellIndex] = 0; // Reset so triple-tap doesn't re-trigger
+        return;
+      }
+
+      // Single tap → enter swap mode (select this cell)
+      enterSwapMode(cellIndex);
       return;
     }
   }
@@ -501,6 +531,20 @@ const UI = (() => {
 
     $('#btn-stats').addEventListener('click', () => showStats());
     $('#btn-help').addEventListener('click', () => $('#help-overlay').classList.remove('hidden'));
+
+    // Help mode toggle (easy mode — shows placement hints)
+    const helpModeBtn = $('#btn-help-mode');
+    if (helpModeBtn) {
+      helpModeBtn.addEventListener('click', () => {
+        helpMode = !helpMode;
+        helpModeBtn.classList.toggle('active', helpMode);
+        helpModeBtn.textContent = helpMode ? '💡 Hints ON' : '💡 Hints';
+        if (!helpMode) clearPlacementHints();
+        else if (selectedDraftIndex >= 0) updatePlacementHints();
+        Game.haptic('light');
+      });
+    }
+
     $$('.close-overlay').forEach(btn => { btn.addEventListener('click', () => btn.closest('.overlay').classList.add('hidden')); });
     $$('.overlay').forEach(o => { o.addEventListener('click', (e) => { if (e.target === o) o.classList.add('hidden'); }); });
   }
