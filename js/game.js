@@ -124,6 +124,48 @@ const Game = (() => {
   }
 
   /**
+   * Draft a contestant and place them in a specific cell.
+   * If the target cell is occupied, swap the new pick into that spot
+   * and move the existing contestant to the first empty cell.
+   * @param {number} optionIndex - 0, 1, or 2
+   * @param {number} cellIndex - 0-11 target cell
+   */
+  function draftToCell(optionIndex, cellIndex) {
+    if (state.phase !== 'drafting' || state.round >= 12) return false;
+
+    const options = getDraftOptions();
+    if (!options || optionIndex < 0 || optionIndex >= 3) return false;
+    if (cellIndex < 0 || cellIndex >= 12) return false;
+
+    const contestant = { ...options[optionIndex] };
+    state.drafted.push(contestant);
+
+    // If target cell is occupied, displace its occupant to first empty cell
+    if (state.board[cellIndex] !== null) {
+      const displaced = state.board[cellIndex];
+      const emptyIndex = state.board.indexOf(null);
+      if (emptyIndex !== -1) {
+        state.board[emptyIndex] = displaced;
+      }
+    }
+
+    state.board[cellIndex] = contestant;
+    state.selectedIndex = null;
+
+    // Advance round
+    state.round++;
+
+    if (state.round >= 12) {
+      state.phase = 'optimizing';
+    }
+
+    recalcScore();
+    saveCurrentState();
+    notifyUI();
+    return true;
+  }
+
+  /**
    * Swap two cells on the board.
    * Works during both drafting and optimizing phases.
    */
@@ -311,6 +353,7 @@ const Game = (() => {
     resumeGame,
     getDraftOptions,
     draftContestant,
+    draftToCell,
     swapCells,
     selectCell,
     completeGame,
