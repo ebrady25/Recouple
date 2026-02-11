@@ -1262,3 +1262,154 @@ body::before {
 #btn-confirm {
   display: none !important;
 }
+
+/* ═══ RARITY CARD DESIGNS ═══ */
+/* Bronze (1-star) — subtle, muted */
+.draft-card.rarity-bronze {
+  border-color: rgba(205, 127, 50, 0.4);
+}
+.draft-card.rarity-bronze::before {
+  background: linear-gradient(90deg, #8b6914, #cd7f32, #8b6914);
+  opacity: 1;
+}
+.draft-card.rarity-bronze .card-stars {
+  color: #cd7f32;
+  font-size: 0.65rem;
+}
+
+/* Silver (2-star) — clean, bright border */
+.draft-card.rarity-silver {
+  border-color: rgba(192, 192, 192, 0.5);
+}
+.draft-card.rarity-silver::before {
+  background: linear-gradient(90deg, #808080, #c0c0c0, #e8e8e8, #c0c0c0, #808080);
+  opacity: 1;
+}
+.draft-card.rarity-silver .card-stars {
+  color: #c0c0c0;
+  font-size: 0.65rem;
+}
+
+/* Gold (3-star) — warm glow, premium feel */
+.draft-card.rarity-gold {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.15), inset 0 0 12px rgba(255, 215, 0, 0.03);
+}
+.draft-card.rarity-gold::before {
+  background: linear-gradient(90deg, #b8860b, #ffd700, #fff8dc, #ffd700, #b8860b);
+  opacity: 1;
+  height: 4px;
+}
+.draft-card.rarity-gold .card-stars {
+  color: #ffd700;
+  font-size: 0.65rem;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+.draft-card.rarity-gold .card-avatar {
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+}
+
+/* Diamond (4-star) — prismatic shimmer, unmistakable */
+.draft-card.rarity-diamond {
+  border-color: rgba(185, 242, 255, 0.6);
+  box-shadow: 0 0 20px rgba(185, 242, 255, 0.2), 0 0 40px rgba(185, 242, 255, 0.08), inset 0 0 20px rgba(185, 242, 255, 0.05);
+  background: linear-gradient(160deg, rgba(30, 30, 60, 0.95), rgba(20, 40, 80, 0.95));
+}
+.draft-card.rarity-diamond::before {
+  background: linear-gradient(90deg, #4fc3f7, #b9f2ff, #e1f5fe, #b9f2ff, #4fc3f7);
+  background-size: 200% 100%;
+  opacity: 1;
+  height: 4px;
+  animation: diamondShimmer 2s linear infinite;
+}
+.draft-card.rarity-diamond::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4fc3f7, #b9f2ff, #e1f5fe, #b9f2ff, #4fc3f7);
+  background-size: 200% 100%;
+  animation: diamondShimmer 2s linear infinite reverse;
+}
+.draft-card.rarity-diamond .card-stars {
+  color: #b9f2ff;
+  font-size: 0.65rem;
+  text-shadow: 0 0 10px rgba(185, 242, 255, 0.6);
+}
+.draft-card.rarity-diamond .card-avatar {
+  box-shadow: 0 0 16px rgba(185, 242, 255, 0.4);
+}
+.draft-card.rarity-diamond .card-name {
+  color: #e1f5fe;
+}
+
+@keyframes diamondShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Rarity badge (points indicator in corner) */
+.card-rarity-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 6px;
+  z-index: 2;
+  font-family: var(--font-mono);
+}
+.rarity-bronze .card-rarity-badge {
+  background: rgba(205, 127, 50, 0.2);
+  color: #cd7f32;
+  border: 1px solid rgba(205, 127, 50, 0.3);
+}
+.rarity-silver .card-rarity-badge {
+  background: rgba(192, 192, 192, 0.15);
+  color: #c0c0c0;
+  border: 1px solid rgba(192, 192, 192, 0.3);
+}
+.rarity-gold .card-rarity-badge {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+.rarity-diamond .card-rarity-badge {
+  background: rgba(185, 242, 255, 0.15);
+  color: #b9f2ff;
+  border: 1px solid rgba(185, 242, 255, 0.3);
+}
+
+/* Selected states preserve rarity feel */
+.draft-card.rarity-gold.selected {
+  border-color: var(--valid-green);
+  box-shadow: 0 0 24px rgba(46, 213, 115, 0.2), 0 0 12px rgba(255, 215, 0, 0.1);
+}
+.draft-card.rarity-diamond.selected {
+  border-color: var(--valid-green);
+  box-shadow: 0 0 24px rgba(46, 213, 115, 0.2), 0 0 16px rgba(185, 242, 255, 0.15);
+}
+
+/* ═══ HELP MODE TOGGLE ═══ */
+#btn-help-mode {
+  font-size: 0.7rem !important;
+  padding: 4px 8px !important;
+  min-width: auto;
+}
+#btn-help-mode.active {
+  background: rgba(46, 213, 115, 0.2);
+  border-color: rgba(46, 213, 115, 0.4);
+  color: #2ed573;
+}
+
+/* ═══ INSPECTOR RARITY STYLING ═══ */
+.inspector-card.rarity-gold {
+  border-color: rgba(255, 215, 0, 0.3);
+}
+.inspector-card.rarity-diamond {
+  border-color: rgba(185, 242, 255, 0.4);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(185, 242, 255, 0.1);
+}
