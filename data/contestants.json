@@ -1,0 +1,1876 @@
+[
+  {
+    "id": "justine-ndiba",
+    "name": "Justine Ndiba",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S2",
+    "seasonNum": 2,
+    "seasonYear": 2020,
+    "couple": "Caleb Corprew",
+    "show": "usa"
+  },
+  {
+    "id": "caleb-corprew",
+    "name": "Caleb Corprew",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S2",
+    "seasonNum": 2,
+    "seasonYear": 2020,
+    "couple": "Justine Ndiba",
+    "show": "usa"
+  },
+  {
+    "id": "cely-vazquez",
+    "name": "Cely Vazquez",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S2",
+    "seasonNum": 2,
+    "seasonYear": 2020,
+    "couple": "Johnny Middlebrooks",
+    "show": "usa"
+  },
+  {
+    "id": "johnny-middlebrooks",
+    "name": "Johnny Middlebrooks",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S2",
+    "seasonNum": 2,
+    "seasonYear": 2020,
+    "couple": "Cely Vazquez",
+    "show": "usa"
+  },
+  {
+    "id": "korey-gandy",
+    "name": "Korey Gandy",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": "Olivia Kaiser",
+    "show": "usa"
+  },
+  {
+    "id": "olivia-kaiser",
+    "name": "Olivia Kaiser",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": "Korey Gandy",
+    "show": "usa"
+  },
+  {
+    "id": "will-moncada",
+    "name": "Will Moncada",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": "Kyra Lizama",
+    "show": "usa"
+  },
+  {
+    "id": "kyra-lizama",
+    "name": "Kyra Lizama",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": "Will Moncada",
+    "show": "usa"
+  },
+  {
+    "id": "cashay-proudfoot",
+    "name": "Cashay Proudfoot",
+    "tags": [
+      "usa",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "shannon-st-clair",
+    "name": "Shannon St. Clair",
+    "tags": [
+      "usa",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": "Josh Goldstein",
+    "show": "usa"
+  },
+  {
+    "id": "josh-goldstein",
+    "name": "Josh Goldstein",
+    "tags": [
+      "usa",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S3",
+    "seasonNum": 3,
+    "seasonYear": 2021,
+    "couple": "Shannon St. Clair",
+    "show": "usa"
+  },
+  {
+    "id": "timmy-pandolfi",
+    "name": "Timmy Pandolfi",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S4",
+    "seasonNum": 4,
+    "seasonYear": 2022,
+    "couple": "Zeta Morrison",
+    "show": "usa"
+  },
+  {
+    "id": "zeta-morrison",
+    "name": "Zeta Morrison",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S4",
+    "seasonNum": 4,
+    "seasonYear": 2022,
+    "couple": "Timmy Pandolfi",
+    "show": "usa"
+  },
+  {
+    "id": "deb-chubb",
+    "name": "Deb Chubb",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S4",
+    "seasonNum": 4,
+    "seasonYear": 2022,
+    "couple": "Jesse Bray",
+    "show": "usa"
+  },
+  {
+    "id": "jesse-bray",
+    "name": "Jesse Bray",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S4",
+    "seasonNum": 4,
+    "seasonYear": 2022,
+    "couple": "Deb Chubb",
+    "show": "usa"
+  },
+  {
+    "id": "sydney-paight",
+    "name": "Sydney Paight",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S4",
+    "seasonNum": 4,
+    "seasonYear": 2022,
+    "couple": "Isaiah Campbell",
+    "show": "usa"
+  },
+  {
+    "id": "isaiah-campbell",
+    "name": "Isaiah Campbell",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S4",
+    "seasonNum": 4,
+    "seasonYear": 2022,
+    "couple": "Sydney Paight",
+    "show": "usa"
+  },
+  {
+    "id": "hannah-wright",
+    "name": "Hannah Wright",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S5",
+    "seasonNum": 5,
+    "seasonYear": 2023,
+    "couple": "Marco Donatelli",
+    "show": "usa"
+  },
+  {
+    "id": "marco-donatelli",
+    "name": "Marco Donatelli",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "USA S5",
+    "seasonNum": 5,
+    "seasonYear": 2023,
+    "couple": "Hannah Wright",
+    "show": "usa"
+  },
+  {
+    "id": "keenan-anunay",
+    "name": "Keenan Anunay",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S5",
+    "seasonNum": 5,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "anna-dolce",
+    "name": "Anna Dolce",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S5",
+    "seasonNum": 5,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "rob-rausch",
+    "name": "Rob Rausch",
+    "tags": [
+      "usa",
+      "casa",
+      "season6",
+      "bombshell"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "serena-page",
+    "name": "Serena Page",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Kordell Beckham",
+    "show": "usa"
+  },
+  {
+    "id": "kordell-beckham",
+    "name": "Kordell Beckham",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Serena Page",
+    "show": "usa"
+  },
+  {
+    "id": "jw-buckner",
+    "name": "JW Buckner",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "season6",
+      "bombshell"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Leah Kateb",
+    "show": "usa"
+  },
+  {
+    "id": "leah-kateb",
+    "name": "Leah Kateb",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "JW Buckner",
+    "show": "usa"
+  },
+  {
+    "id": "miguel-harichi",
+    "name": "Miguel Harichi",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "season6",
+      "bombshell"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Andrea Alcime",
+    "show": "usa"
+  },
+  {
+    "id": "andrea-alcime",
+    "name": "Andrea Alcime",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "season6",
+      "bombshell"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Miguel Harichi",
+    "show": "usa"
+  },
+  {
+    "id": "aaron-evans",
+    "name": "Aaron Evans",
+    "tags": [
+      "usa",
+      "season6",
+      "day1"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Kaylor Martin",
+    "show": "usa"
+  },
+  {
+    "id": "kaylor-martin",
+    "name": "Kaylor Martin",
+    "tags": [
+      "usa",
+      "season6",
+      "day1"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Aaron Evans",
+    "show": "usa"
+  },
+  {
+    "id": "jana-craig",
+    "name": "JaNa Craig",
+    "tags": [
+      "usa",
+      "season6",
+      "day1"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "Kenny Rodriguez",
+    "show": "usa"
+  },
+  {
+    "id": "kenny-rodriguez",
+    "name": "Kenny Rodriguez",
+    "tags": [
+      "usa",
+      "casa",
+      "season6",
+      "bombshell"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": "JaNa Craig",
+    "show": "usa"
+  },
+  {
+    "id": "nicole-jacky",
+    "name": "Nicole Jacky",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "season6",
+      "bombshell"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "elizabeth-weber",
+    "name": "Elizabeth Weber",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S1",
+    "seasonNum": 1,
+    "seasonYear": 2019,
+    "couple": "Zac Mirabelli",
+    "show": "usa"
+  },
+  {
+    "id": "zac-mirabelli",
+    "name": "Zac Mirabelli",
+    "tags": [
+      "usa",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S1",
+    "seasonNum": 1,
+    "seasonYear": 2019,
+    "couple": "Elizabeth Weber",
+    "show": "usa"
+  },
+  {
+    "id": "molly-mae-hague",
+    "name": "Molly-Mae Hague",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": "Tommy Fury",
+    "show": "uk"
+  },
+  {
+    "id": "tommy-fury",
+    "name": "Tommy Fury",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": "Molly-Mae Hague",
+    "show": "uk"
+  },
+  {
+    "id": "amber-gill",
+    "name": "Amber Gill",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": "Greg O'Shea",
+    "show": "uk"
+  },
+  {
+    "id": "greg-oshea",
+    "name": "Greg O'Shea",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "casa",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": "Amber Gill",
+    "show": "uk"
+  },
+  {
+    "id": "ovie-soko",
+    "name": "Ovie Soko",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "casa",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "maura-higgins",
+    "name": "Maura Higgins",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "ekin-su-culculoglu",
+    "name": "Ekin-Su Cülcüloğlu",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Davide Sanclimenti",
+    "show": "uk"
+  },
+  {
+    "id": "davide-sanclimenti",
+    "name": "Davide Sanclimenti",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Ekin-Su Cülcüloğlu",
+    "show": "uk"
+  },
+  {
+    "id": "gemma-owen",
+    "name": "Gemma Owen",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Luca Bish",
+    "show": "uk"
+  },
+  {
+    "id": "luca-bish",
+    "name": "Luca Bish",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Gemma Owen",
+    "show": "uk"
+  },
+  {
+    "id": "indiyah-polack",
+    "name": "Indiyah Polack",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Dami Hope",
+    "show": "uk"
+  },
+  {
+    "id": "dami-hope",
+    "name": "Dami Hope",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Indiyah Polack",
+    "show": "uk"
+  },
+  {
+    "id": "tasha-ghouri",
+    "name": "Tasha Ghouri",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Andrew Le Page",
+    "show": "uk"
+  },
+  {
+    "id": "andrew-le-page",
+    "name": "Andrew Le Page",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": "Tasha Ghouri",
+    "show": "uk"
+  },
+  {
+    "id": "adam-collard",
+    "name": "Adam Collard",
+    "tags": [
+      "uk",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "coco-lodge",
+    "name": "Coco Lodge",
+    "tags": [
+      "uk",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "summer-botwe",
+    "name": "Summer Botwe",
+    "tags": [
+      "uk",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "deji-adeniyi",
+    "name": "Deji Adeniyi",
+    "tags": [
+      "uk",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S8",
+    "seasonNum": 8,
+    "seasonYear": 2022,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "dani-dyer",
+    "name": "Dani Dyer",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": "Jack Fincham",
+    "show": "uk"
+  },
+  {
+    "id": "jack-fincham",
+    "name": "Jack Fincham",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": "Dani Dyer",
+    "show": "uk"
+  },
+  {
+    "id": "georgia-steel",
+    "name": "Georgia Steel",
+    "tags": [
+      "uk",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "kaz-crossley",
+    "name": "Kaz Crossley",
+    "tags": [
+      "uk",
+      "casa",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "paige-turley",
+    "name": "Paige Turley",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S6",
+    "seasonNum": 6,
+    "seasonYear": 2020,
+    "couple": "Finley Tapp",
+    "show": "uk"
+  },
+  {
+    "id": "finley-tapp",
+    "name": "Finley Tapp",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S6",
+    "seasonNum": 6,
+    "seasonYear": 2020,
+    "couple": "Paige Turley",
+    "show": "uk"
+  },
+  {
+    "id": "siannise-fudge",
+    "name": "Siannise Fudge",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S6",
+    "seasonNum": 6,
+    "seasonYear": 2020,
+    "couple": "Luke Trotman",
+    "show": "uk"
+  },
+  {
+    "id": "luke-trotman",
+    "name": "Luke Trotman",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "season6",
+      "bombshell"
+    ],
+    "season": "UK S6",
+    "seasonNum": 6,
+    "seasonYear": 2020,
+    "couple": "Siannise Fudge",
+    "show": "uk"
+  },
+  {
+    "id": "millie-court",
+    "name": "Millie Court",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": "Liam Reardon",
+    "show": "uk"
+  },
+  {
+    "id": "liam-reardon",
+    "name": "Liam Reardon",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": "Millie Court",
+    "show": "uk"
+  },
+  {
+    "id": "faye-winter",
+    "name": "Faye Winter",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": "Teddy Soares",
+    "show": "uk"
+  },
+  {
+    "id": "teddy-soares",
+    "name": "Teddy Soares",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": "Faye Winter",
+    "show": "uk"
+  },
+  {
+    "id": "chloe-burrows",
+    "name": "Chloe Burrows",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": "Toby Aromolaran",
+    "show": "uk"
+  },
+  {
+    "id": "toby-aromolaran",
+    "name": "Toby Aromolaran",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": "Chloe Burrows",
+    "show": "uk"
+  },
+  {
+    "id": "lillie-haynes",
+    "name": "Lillie Haynes",
+    "tags": [
+      "uk",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "jess-harding",
+    "name": "Jess Harding",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S10",
+    "seasonNum": 10,
+    "seasonYear": 2024,
+    "couple": "Sammy Root",
+    "show": "uk"
+  },
+  {
+    "id": "sammy-root",
+    "name": "Sammy Root",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S10",
+    "seasonNum": 10,
+    "seasonYear": 2024,
+    "couple": "Jess Harding",
+    "show": "uk"
+  },
+  {
+    "id": "ella-thomas",
+    "name": "Ella Thomas",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S10",
+    "seasonNum": 10,
+    "seasonYear": 2024,
+    "couple": "Tyrique Hyde",
+    "show": "uk"
+  },
+  {
+    "id": "tyrique-hyde",
+    "name": "Tyrique Hyde",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S10",
+    "seasonNum": 10,
+    "seasonYear": 2024,
+    "couple": "Ella Thomas",
+    "show": "uk"
+  },
+  {
+    "id": "mimii-ngulube",
+    "name": "Mimii Ngulube",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": "Josh Oyinsan",
+    "show": "uk"
+  },
+  {
+    "id": "josh-oyinsan",
+    "name": "Josh Oyinsan",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "casa",
+      "season6",
+      "bombshell"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": "Mimii Ngulube",
+    "show": "uk"
+  },
+  {
+    "id": "sean-stone",
+    "name": "Sean Stone",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": "Matilda Draper",
+    "show": "uk"
+  },
+  {
+    "id": "matilda-draper",
+    "name": "Matilda Draper",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": "Sean Stone",
+    "show": "uk"
+  },
+  {
+    "id": "nicole-samuel",
+    "name": "Nicole Samuel",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": "Ciaran Davies",
+    "show": "uk"
+  },
+  {
+    "id": "ciaran-davies",
+    "name": "Ciaran Davies",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "season6",
+      "day1"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": "Nicole Samuel",
+    "show": "uk"
+  },
+  {
+    "id": "uma-jammeh",
+    "name": "Uma Jammeh",
+    "tags": [
+      "uk",
+      "season6",
+      "bombshell"
+    ],
+    "season": "UK S11",
+    "seasonNum": 11,
+    "seasonYear": 2024,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "kem-cetinay",
+    "name": "Kem Cetinay",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": "Amber Davies",
+    "show": "uk"
+  },
+  {
+    "id": "amber-davies",
+    "name": "Amber Davies",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": "Kem Cetinay",
+    "show": "uk"
+  },
+  {
+    "id": "cara-de-la-hoyde",
+    "name": "Cara De La Hoyde",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S2",
+    "seasonNum": 2,
+    "seasonYear": 2016,
+    "couple": "Nathan Massey",
+    "show": "uk"
+  },
+  {
+    "id": "nathan-massey",
+    "name": "Nathan Massey",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S2",
+    "seasonNum": 2,
+    "seasonYear": 2016,
+    "couple": "Cara De La Hoyde",
+    "show": "uk"
+  },
+  {
+    "id": "olivia-buckland",
+    "name": "Olivia Buckland",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S2",
+    "seasonNum": 2,
+    "seasonYear": 2016,
+    "couple": "Alex Bowen",
+    "show": "uk"
+  },
+  {
+    "id": "alex-bowen",
+    "name": "Alex Bowen",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S2",
+    "seasonNum": 2,
+    "seasonYear": 2016,
+    "couple": "Olivia Buckland",
+    "show": "uk"
+  },
+  {
+    "id": "zara-holland",
+    "name": "Zara Holland",
+    "tags": [
+      "uk",
+      "og_era",
+      "day1"
+    ],
+    "season": "UK S2",
+    "seasonNum": 2,
+    "seasonYear": 2016,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "sophie-gradon",
+    "name": "Sophie Gradon",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S2",
+    "seasonNum": 2,
+    "seasonYear": 2016,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "chris-hughes",
+    "name": "Chris Hughes",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": "Olivia Attwood",
+    "show": "uk"
+  },
+  {
+    "id": "olivia-attwood",
+    "name": "Olivia Attwood",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": "Chris Hughes",
+    "show": "uk"
+  },
+  {
+    "id": "camilla-thurlow",
+    "name": "Camilla Thurlow",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": "Jamie Jewitt",
+    "show": "uk"
+  },
+  {
+    "id": "jamie-jewitt",
+    "name": "Jamie Jewitt",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": "Camilla Thurlow",
+    "show": "uk"
+  },
+  {
+    "id": "montana-brown",
+    "name": "Montana Brown",
+    "tags": [
+      "uk",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S3",
+    "seasonNum": 3,
+    "seasonYear": 2017,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "laura-anderson",
+    "name": "Laura Anderson",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "alex-george",
+    "name": "Dr Alex George",
+    "tags": [
+      "uk",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "wes-nelson",
+    "name": "Wes Nelson",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": "Megan Barton-Hanson",
+    "show": "uk"
+  },
+  {
+    "id": "megan-barton-hanson",
+    "name": "Megan Barton-Hanson",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "UK S4",
+    "seasonNum": 4,
+    "seasonYear": 2018,
+    "couple": "Wes Nelson",
+    "show": "uk"
+  },
+  {
+    "id": "curtis-pritchard",
+    "name": "Curtis Pritchard",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "anna-vakili",
+    "name": "Anna Vakili",
+    "tags": [
+      "uk",
+      "day1",
+      "og_era"
+    ],
+    "season": "UK S5",
+    "seasonNum": 5,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "shaughna-phillips",
+    "name": "Shaughna Phillips",
+    "tags": [
+      "uk",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S6",
+    "seasonNum": 6,
+    "seasonYear": 2020,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "callum-jones",
+    "name": "Callum Jones",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S6",
+    "seasonNum": 6,
+    "seasonYear": 2020,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "liberty-poole",
+    "name": "Liberty Poole",
+    "tags": [
+      "uk",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S7",
+    "seasonNum": 7,
+    "seasonYear": 2021,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "sanam-harrinanan",
+    "name": "Sanam Harrinanan",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S9",
+    "seasonNum": 9,
+    "seasonYear": 2023,
+    "couple": "Kai Fagan",
+    "show": "uk"
+  },
+  {
+    "id": "kai-fagan",
+    "name": "Kai Fagan",
+    "tags": [
+      "uk",
+      "winner",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S9",
+    "seasonNum": 9,
+    "seasonYear": 2023,
+    "couple": "Sanam Harrinanan",
+    "show": "uk"
+  },
+  {
+    "id": "tanya-manhenga",
+    "name": "Tanya Manhenga",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S9",
+    "seasonNum": 9,
+    "seasonYear": 2023,
+    "couple": "Shaq Muhammad",
+    "show": "uk"
+  },
+  {
+    "id": "shaq-muhammad",
+    "name": "Shaq Muhammad",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S9",
+    "seasonNum": 9,
+    "seasonYear": 2023,
+    "couple": "Tanya Manhenga",
+    "show": "uk"
+  },
+  {
+    "id": "olivia-hawkins",
+    "name": "Olivia Hawkins",
+    "tags": [
+      "uk",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S9",
+    "seasonNum": 9,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "ron-hall",
+    "name": "Ron Hall",
+    "tags": [
+      "uk",
+      "coupled",
+      "finale",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S9",
+    "seasonNum": 9,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "mitchel-taylor",
+    "name": "Mitchel Taylor",
+    "tags": [
+      "uk",
+      "day1",
+      "season6"
+    ],
+    "season": "UK S10",
+    "seasonNum": 10,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "zara-lackenby-brown",
+    "name": "Zara Lackenby-Brown",
+    "tags": [
+      "uk",
+      "bombshell",
+      "season6"
+    ],
+    "season": "UK S10",
+    "seasonNum": 10,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "uk"
+  },
+  {
+    "id": "kyra-green",
+    "name": "Kyra Green",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S1",
+    "seasonNum": 1,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "cashel-barnett",
+    "name": "Cashel Barnett",
+    "tags": [
+      "usa",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S1",
+    "seasonNum": 1,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "alexandra-stewart",
+    "name": "Alexandra Stewart",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S1",
+    "seasonNum": 1,
+    "seasonYear": 2019,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "carrington-rodriguez",
+    "name": "Carrington Rodriguez",
+    "tags": [
+      "usa",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S2",
+    "seasonNum": 2,
+    "seasonYear": 2020,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "moira-tumas",
+    "name": "Moira Tumas",
+    "tags": [
+      "usa",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S2",
+    "seasonNum": 2,
+    "seasonYear": 2020,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "carmen-kocourek",
+    "name": "Carmen Kocourek",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "day1",
+      "og_era"
+    ],
+    "season": "USA S5",
+    "seasonNum": 5,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "bergie-katumba",
+    "name": "Bergie Katumba",
+    "tags": [
+      "usa",
+      "coupled",
+      "finale",
+      "bombshell",
+      "og_era"
+    ],
+    "season": "USA S5",
+    "seasonNum": 5,
+    "seasonYear": 2023,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "destiny-herzog",
+    "name": "Destiny Herzog",
+    "tags": [
+      "usa",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": null,
+    "show": "usa"
+  },
+  {
+    "id": "sierra-mills",
+    "name": "Sierra Mills",
+    "tags": [
+      "usa",
+      "casa",
+      "bombshell",
+      "season6"
+    ],
+    "season": "USA S6",
+    "seasonNum": 6,
+    "seasonYear": 2024,
+    "couple": null,
+    "show": "usa"
+  }
+]
