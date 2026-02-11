@@ -18,16 +18,22 @@ const UI = (() => {
 
   // ─── Board Layout Coordinates (percentage-based for responsive SVG) ───
   // Positions map to slot indices 0-8 on the Griddy topology
+  // New layout:
+  //      [0:Winner]────[1:Bombshell]
+  //       / \            / \
+  //   [2:WILD] [3:USA]──[4:UK] [5:WILD]
+  //       \ / \      / \ /
+  //      [6:Day1] [8:Casa] [7:Coupled]
   const SLOT_POS = [
-    { x: 35, y: 4  },   // 0: USA (top-left)
-    { x: 65, y: 4  },   // 1: UK (top-right)
-    { x: 5,  y: 35 },   // 2: Winner (left)
-    { x: 35, y: 40 },   // 3: Coupled (center-left) — 5 connections
-    { x: 65, y: 40 },   // 4: Day 1 (center-right) — 5 connections
-    { x: 95, y: 35 },   // 5: Bombshell (right)
-    { x: 12, y: 72 },   // 6: OG Era (bottom-left)
-    { x: 88, y: 72 },   // 7: S6+ (bottom-right)
-    { x: 50, y: 82 },   // 8: Rotating (bottom-center) — 4 connections
+    { x: 35, y: 4  },   // 0: Winner (top-left)
+    { x: 65, y: 4  },   // 1: Bombshell (top-right)
+    { x: 5,  y: 35 },   // 2: WILD-L (left)
+    { x: 35, y: 42 },   // 3: USA (center-left, power position, lowered)
+    { x: 65, y: 42 },   // 4: UK (center-right, power position, lowered)
+    { x: 95, y: 35 },   // 5: WILD-R (right)
+    { x: 12, y: 72 },   // 6: Day 1 (bottom-left)
+    { x: 88, y: 72 },   // 7: Coupled (bottom-right)
+    { x: 50, y: 82 },   // 8: Casa Amor (bottom-center)
   ];
 
   const AVATAR_COLORS = [
@@ -117,13 +123,17 @@ const UI = (() => {
         `;
       } else {
         cellClass += ' cell-empty';
+        if (sl.tag === null) cellClass += ' cell-wild';
         if (helpMode && selectedDraftIndex >= 0) {
-          const state2 = Game.getState();
           const options = Game.getDraftOptions();
           if (options && options[selectedDraftIndex]) {
             const draftee = options[selectedDraftIndex];
-            const wouldBeValid = draftee.tags.includes(Scoring.SLOT_TAGS[i]);
-            cellClass += wouldBeValid ? ' hint-valid' : ' hint-invalid';
+            if (sl.tag === null) {
+              cellClass += ' hint-valid'; // WILD always valid
+            } else {
+              const wouldBeValid = draftee.tags.includes(sl.tag);
+              cellClass += wouldBeValid ? ' hint-valid' : ' hint-invalid';
+            }
           }
         }
         cellContent = `
@@ -278,11 +288,18 @@ const UI = (() => {
     if (!draftEl || !score) return;
 
     const coupleCount = score.coupleEdges.length;
+    
+    // Calculate percentage
+    const opt = Scoring.calculateOptimal(state.drafted, score.total);
+    const pct = opt.percentage;
+    const pctClass = pct === 100 ? 'pct-perfect' : pct >= 80 ? 'pct-great' : pct >= 60 ? 'pct-good' : 'pct-low';
 
     draftEl.innerHTML = `
       <div class="completion-panel">
         <div class="completion-score">${score.total}</div>
         <div class="completion-label">points</div>
+        <div class="completion-pct ${pctClass}">${pct}% optimal</div>
+        ${pct < 100 ? `<div class="completion-optimal">Best possible: ${opt.optimalScore}pts</div>` : ''}
         <div class="completion-breakdown">
           <span>🎯 Slots: ${score.totalSlot}</span>
           <span>⭐ Rarity: ${score.totalRarity}</span>
@@ -318,8 +335,21 @@ const UI = (() => {
     if (!el || !state.score) return;
 
     const s = state.score;
+
+    // Calculate percentage (optimal arrangement)
+    let pctDisplay = '';
+    if (state.drafted.length === 9) {
+      const opt = Scoring.calculateOptimal(state.drafted, s.total);
+      const pct = opt.percentage;
+      const pctClass = pct === 100 ? 'pct-perfect' : pct >= 80 ? 'pct-great' : pct >= 60 ? 'pct-good' : 'pct-low';
+      pctDisplay = `<div class="score-pct ${pctClass}">${pct}%</div>`;
+    }
+
     el.innerHTML = `
-      <div class="score-total">${s.total}<span class="score-unit">pts</span></div>
+      <div class="score-main">
+        <div class="score-total">${s.total}<span class="score-unit">pts</span></div>
+        ${pctDisplay}
+      </div>
       <div class="score-breakdown">
         <div class="sb-item"><span class="sb-label">🎯 Slots</span><span class="sb-val">${s.totalSlot}</span></div>
         <div class="sb-item"><span class="sb-label">⭐ Rarity</span><span class="sb-val">${s.totalRarity}</span></div>
@@ -460,18 +490,18 @@ const UI = (() => {
         <div class="insp-header"><div class="insp-name">How to Play</div></div>
         <div class="help-content">
           <p><strong>Draft</strong> 9 Love Island contestants over 9 rounds (pick 1 of 3).</p>
-          <p><strong>Place</strong> them on the board — each slot has a trait. Match the trait for +2 points.</p>
+          <p><strong>Place</strong> them on the board — each slot has a trait. Match the trait for +2 points. 🃏 Wild slots accept anyone but give 0 slot pts.</p>
           <p><strong>Connect</strong> for bonus points! Cards linked by lines score:</p>
           <ul>
-            <li>🌍 Same country: +1 each</li>
+            <li>🌍 Same country: +2 each</li>
             <li>🗓 Same season: +1 each</li>
-            <li>🔥 Country + Season: +4 each</li>
+            <li>🔥 Country + Season: +5 each</li>
             <li>💕 Real couple: +4 each</li>
           </ul>
           <p><strong>Stars</strong> add bonus: ★=0, ★★=+1, ★★★=+2, ★★★★=+3</p>
-          <p><strong>Perfect board</strong> (all 9 slots matched): +8 bonus</p>
-          <p>Center slots have 5 connections — they're the power positions!</p>
-          <p class="help-rotate">Today's rotating slot: ${rotSlot.emoji} ${rotSlot.label}</p>
+          <p><strong>Perfect board</strong> (all non-wild slots matched): +6 bonus</p>
+          <p>🇺🇸 and 🇬🇧 slots have 5 connections — they're the power positions!</p>
+          <p class="help-rotate">Your score shows a % of optimal — 100% means perfect placement!</p>
         </div>
         <button class="insp-close">Got It</button>
       </div>
