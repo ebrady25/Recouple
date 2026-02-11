@@ -1,72 +1,36 @@
 /**
- * RECOUPLE — Storage Module
- * =========================
- * Handles all localStorage operations with safe fallbacks.
- * Keys are prefixed with 'recouple_' to avoid collisions.
+ * RECOUPLE v2 — Storage Module
+ * =============================
+ * localStorage with safe fallbacks. Adapted for 9-card Griddy board.
  */
 
 const Storage = (() => {
 
   const PREFIX = 'recouple_';
 
-  function _key(name) {
-    return PREFIX + name;
-  }
-
+  function _key(name) { return PREFIX + name; }
   function _get(key) {
-    try {
-      const raw = localStorage.getItem(_key(key));
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) {
-      console.warn('Storage read error:', key, e);
-      return null;
-    }
+    try { const r = localStorage.getItem(_key(key)); return r ? JSON.parse(r) : null; }
+    catch(e) { return null; }
   }
-
   function _set(key, value) {
-    try {
-      localStorage.setItem(_key(key), JSON.stringify(value));
-      return true;
-    } catch (e) {
-      console.warn('Storage write error:', key, e);
-      return false;
-    }
+    try { localStorage.setItem(_key(key), JSON.stringify(value)); return true; }
+    catch(e) { return false; }
   }
-
   function _remove(key) {
-    try {
-      localStorage.removeItem(_key(key));
-    } catch (e) {
-      console.warn('Storage remove error:', key, e);
-    }
+    try { localStorage.removeItem(_key(key)); } catch(e) {}
   }
-
-  // ─── Date Helpers ───
 
   function todayStr() {
     return new Date().toISOString().split('T')[0];
   }
 
   // ─── Game State ───
-
-  /**
-   * Save current game state.
-   * @param {Object} state - { date, gameNumber, round, draftedContestants, board, allRounds, score, completed }
-   */
-  function saveGameState(state) {
-    return _set('game_state', state);
-  }
-
-  function loadGameState() {
-    return _get('game_state');
-  }
-
-  function clearGameState() {
-    _remove('game_state');
-  }
+  function saveGameState(state) { return _set('game_state', state); }
+  function loadGameState() { return _get('game_state'); }
+  function clearGameState() { _remove('game_state'); }
 
   // ─── Daily Progress ───
-
   function getDailyProgress(date) {
     const key = 'daily_' + (date || todayStr());
     return _get(key) || {
@@ -81,43 +45,28 @@ const Storage = (() => {
     return _set('daily_' + date, progress);
   }
 
-  /**
-   * Mark a game as completed for today.
-   */
   function completeGame(date, gameNumber, score, finalBoard) {
     const progress = getDailyProgress(date);
-    const key = 'game' + gameNumber;
-    progress[key] = { completed: true, score, finalBoard };
+    progress['game' + gameNumber] = { completed: true, score, finalBoard };
     saveDailyProgress(date, progress);
     return progress;
   }
 
-  /**
-   * Check which game number should be played next.
-   * Testing mode: always returns next available game (unlimited).
-   * Returns 1+ (cycles through games, never returns 0).
-   */
+  // Testing mode: unlimited replays
   function getNextGameNumber(date) {
     const progress = getDailyProgress(date);
     if (!progress.game1.completed) return 1;
     if (!progress.game2.completed) return 2;
     if (!progress.game3.completed) return 3;
-    // Testing mode: allow unlimited replays — cycle back to 1
-    return 1;
+    return 1; // cycle back for testing
   }
 
   // ─── Statistics ───
-
   function getStats() {
     return _get('stats') || {
-      gamesPlayed: 0,
-      totalScore: 0,
-      averageScore: 0,
-      bestScore: 0,
-      currentStreak: 0,
-      longestStreak: 0,
-      perfectGrids: 0,
-      lastPlayedDate: null
+      gamesPlayed: 0, totalScore: 0, averageScore: 0,
+      bestScore: 0, currentStreak: 0, longestStreak: 0,
+      perfectGrids: 0, lastPlayedDate: null
     };
   }
 
@@ -127,30 +76,16 @@ const Storage = (() => {
     stats.totalScore += score;
     stats.averageScore = Math.round((stats.totalScore / stats.gamesPlayed) * 10) / 10;
     stats.bestScore = Math.max(stats.bestScore, score);
-    
-    if (isPerfectGrid) {
-      stats.perfectGrids++;
-    }
+    if (isPerfectGrid) stats.perfectGrids++;
 
-    // Streak logic: check if played yesterday or today
     const today = date || todayStr();
     if (stats.lastPlayedDate) {
-      const last = new Date(stats.lastPlayedDate);
-      const current = new Date(today);
-      const diffDays = Math.floor((current - last) / (1000 * 60 * 60 * 24));
-      
-      if (diffDays <= 1) {
-        // Same day or consecutive day
-        if (diffDays === 1) stats.currentStreak++;
-        // Same day doesn't change streak
-      } else {
-        // Streak broken
-        stats.currentStreak = 1;
-      }
+      const diff = Math.floor((new Date(today) - new Date(stats.lastPlayedDate)) / 86400000);
+      if (diff === 1) stats.currentStreak++;
+      else if (diff > 1) stats.currentStreak = 1;
     } else {
       stats.currentStreak = 1;
     }
-
     stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
     stats.lastPlayedDate = today;
 
@@ -159,59 +94,32 @@ const Storage = (() => {
   }
 
   // ─── Share Results ───
-
-  /**
-   * Generate a shareable text result.
-   */
   function generateShareText(date, gameNumber, score, board, scoreBreakdown) {
     const d = new Date(date);
-    const dateStr = `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(2)}`;
-    
-    // Build star grid
+    const dateStr = `${d.getMonth()+1}/${d.getDate()}/${String(d.getFullYear()).slice(2)}`;
+
+    // Build star layout matching board topology
+    const s = (i) => board[i] ? '⭐'.repeat(board[i].stars) : '⬛';
     let starGrid = '';
-    for (let r = 0; r < 3; r++) {
-      const row = [];
-      for (let c = 0; c < 4; c++) {
-        const cell = board[r * 4 + c];
-        if (cell) {
-          row.push('⭐'.repeat(cell.stars));
-        } else {
-          row.push('⬛');
-        }
-      }
-      starGrid += row.join(' ') + '\n';
-    }
+    starGrid += `    ${s(0)}  ${s(1)}\n`;
+    starGrid += `  ${s(2)} ${s(3)}  ${s(4)} ${s(5)}\n`;
+    starGrid += `   ${s(6)}  ${s(8)}  ${s(7)}\n`;
 
-    const coupleCount = scoreBreakdown.couples.pairs.length;
     const extras = [];
-    if (coupleCount > 0) extras.push(`Couples: ${coupleCount} 💕`);
-    if (scoreBreakdown.perfectGrid.isPerfect) extras.push('Perfect Grid! 🎉');
+    if (scoreBreakdown.coupleEdges.length > 0) extras.push(`Couples: ${scoreBreakdown.coupleEdges.length} 💕`);
+    if (scoreBreakdown.allValid) extras.push('Perfect Board! 🎉');
 
-    let text = `Recouple ${dateStr} - Game ${gameNumber} 🏝️\n`;
-    text += `Score: ${score}pts\n`;
-    text += starGrid;
+    let text = `Recouple ${dateStr} - Game ${gameNumber} 🏝️\nScore: ${score}pts\n${starGrid}`;
     if (extras.length) text += extras.join(' | ');
-
     return text.trim();
   }
 
-  // Public API
   return {
-    todayStr,
-    saveGameState,
-    loadGameState,
-    clearGameState,
-    getDailyProgress,
-    saveDailyProgress,
-    completeGame,
-    getNextGameNumber,
-    getStats,
-    updateStats,
-    generateShareText
+    todayStr, saveGameState, loadGameState, clearGameState,
+    getDailyProgress, saveDailyProgress, completeGame, getNextGameNumber,
+    getStats, updateStats, generateShareText
   };
 
 })();
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Storage;
-}
+if (typeof module !== 'undefined' && module.exports) module.exports = Storage;
