@@ -1,7 +1,8 @@
 /**
  * RECOUPLE — UI Controller
  * ========================
- * Renders game state to DOM, handles events, manages overlays and animations.
+ * Draft flow: Tap card → Tap board cell to place (two intentional taps)
+ * Board flow: Tap filled cell → Inspector popup with tags/traits → Swap button
  */
 
 const UI = (() => {
@@ -10,6 +11,7 @@ const UI = (() => {
 
   let contestantsDB = [];
   let selectedDraftIndex = -1;
+  let swapSourceIndex = null;
   let lastScoreTotal = 0;
 
   const AVATAR_COLORS = [
@@ -37,10 +39,8 @@ const UI = (() => {
     day1:{l:'☀️ DAY1',c:'tag-day1'}
   };
 
-  // Which tags to show on draft cards (context-sensitive based on daily column)
   function getVisibleTags(tags) {
     const col4 = Scoring.getActiveColumn4();
-    // Always show: show (usa/uk), the 3 fixed columns, the active rotating column, and finale
     const relevant = ['usa', 'uk', 'winner', 'coupled', 'casa', 'finale', col4.tag];
     return tags.filter(t => relevant.includes(t));
   }
@@ -60,11 +60,18 @@ const UI = (() => {
     const container = $('#draft-container');
     const cardsEl = $('#draft-cards');
     const titleEl = $('#draft-title');
-    const confirmBtn = $('#btn-confirm');
 
     if (state.phase === 'drafting' && state.round < 12) {
       container.classList.remove('hidden');
-      titleEl.textContent = `🃏 Round ${state.round + 1} — Pick a Contestant`;
+
+      if (selectedDraftIndex >= 0) {
+        titleEl.textContent = '👇 Tap a cell to place them';
+        titleEl.classList.add('placing-hint');
+      } else {
+        titleEl.textContent = `🃏 Round ${state.round + 1} — Pick a Contestant`;
+        titleEl.classList.remove('placing-hint');
+      }
+
       const options = Game.getDraftOptions();
       if (!options) return;
 
@@ -84,19 +91,51 @@ const UI = (() => {
         </div>`;
       }).join('');
 
-      confirmBtn.disabled = selectedDraftIndex === -1;
+      // Hide old confirm button
+      const confirmBtn = $('#btn-confirm');
+      if (confirmBtn) confirmBtn.classList.add('hidden');
+
       $$('.draft-card').forEach(card => {
         card.addEventListener('click', () => {
-          selectedDraftIndex = parseInt(card.dataset.draft);
+          const newIdx = parseInt(card.dataset.draft);
+          selectedDraftIndex = (selectedDraftIndex === newIdx) ? -1 : newIdx;
           $$('.draft-card').forEach((c,j) => c.classList.toggle('selected', j === selectedDraftIndex));
-          confirmBtn.disabled = false;
+          updatePlacementHints();
+          if (selectedDraftIndex >= 0) {
+            titleEl.textContent = '👇 Tap a cell to place them';
+            titleEl.classList.add('placing-hint');
+          } else {
+            titleEl.textContent = `🃏 Round ${state.round + 1} — Pick a Contestant`;
+            titleEl.classList.remove('placing-hint');
+          }
           Game.haptic('light');
         });
       });
+
+      if (selectedDraftIndex >= 0) updatePlacementHints();
     } else {
       container.classList.add('hidden');
       selectedDraftIndex = -1;
     }
+  }
+
+  function updatePlacementHints() {
+    const options = Game.getDraftOptions();
+    $$('.cell').forEach(cellEl => {
+      cellEl.classList.remove('place-hint', 'place-hint-valid', 'place-hint-invalid');
+      if (selectedDraftIndex < 0 || !options) return;
+      const index = parseInt(cellEl.dataset.index);
+      const contestant = options[selectedDraftIndex];
+      const valid = Scoring.isValidPlacement(contestant, index);
+      cellEl.classList.add('place-hint');
+      cellEl.classList.add(valid ? 'place-hint-valid' : 'place-hint-invalid');
+    });
+  }
+
+  function clearPlacementHints() {
+    $$('.cell').forEach(cellEl => {
+      cellEl.classList.remove('place-hint', 'place-hint-valid', 'place-hint-invalid');
+    });
   }
 
   // ═══ RENDER BOARD ═══
@@ -107,8 +146,18 @@ const UI = (() => {
       const c = state.board[index];
       const b = bonuses.get(index);
 
+      // Preserve placement hint classes through render
+      const hasHint = cellEl.classList.contains('place-hint');
+      const hintValid = cellEl.classList.contains('place-hint-valid');
+      const hintInvalid = cellEl.classList.contains('place-hint-invalid');
+      const isInspValid = cellEl.classList.contains('inspector-valid');
+      const isInspCurrent = cellEl.classList.contains('inspector-current');
+
       if (!c) {
-        cellEl.className = 'cell empty';
+        let cls = 'cell empty';
+        if (hasHint) cls += ' place-hint' + (hintValid ? ' place-hint-valid' : '') + (hintInvalid ? ' place-hint-invalid' : '');
+        if (isInspValid) cls += ' inspector-valid';
+        cellEl.className = cls;
         cellEl.innerHTML = '';
         return;
       }
@@ -118,7 +167,10 @@ const UI = (() => {
       const total = base + (b ? b.coupleBonus + b.seasonBonus : 0);
 
       let cls = 'cell filled ' + (valid ? 'valid' : 'invalid');
-      if (state.selectedIndex === index) cls += ' selected';
+      if (swapSourceIndex === index) cls += ' selected swap-source';
+      if (hasHint) cls += ' place-hint' + (hintValid ? ' place-hint-valid' : '') + (hintInvalid ? ' place-hint-invalid' : '');
+      if (isInspValid) cls += ' inspector-valid';
+      if (isInspCurrent) cls += ' inspector-current';
       cellEl.className = cls;
 
       let bonusHTML = '';
@@ -133,6 +185,133 @@ const UI = (() => {
     });
   }
 
+  // ═══ INSPECTOR POPUP ═══
+  function showInspector(cellIndex) {
+    const state = Game.getState();
+    const c = state.board[cellIndex];
+    if (!c) return;
+
+    closeInspector();
+
+    const colors = getAvatarColor(c.name);
+    const photoPath = `images/contestants/${c.id}.jpg`;
+    const valid = Scoring.isValidPlacement(c, cellIndex);
+
+    const validCells = [];
+    for (let i = 0; i < 12; i++) {
+      if (Scoring.isValidPlacement(c, i)) validCells.push(i);
+    }
+
+    const popup = document.createElement('div');
+    popup.id = 'inspector-popup';
+    popup.className = 'inspector-popup';
+    popup.innerHTML = `
+      <div class="inspector-card">
+        <div class="inspector-header">
+          <div class="inspector-avatar" style="background:linear-gradient(135deg,${colors[0]},${colors[1]})">
+            <img src="${photoPath}" alt="${c.name}" loading="lazy"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="initials">${getInitials(c.name)}</span>
+          </div>
+          <div class="inspector-info">
+            <div class="inspector-name">${c.name}</div>
+            <div class="inspector-season">${c.season}</div>
+            <div class="inspector-stars">${renderStars(c.stars)} · ${c.starPoints}pt${c.starPoints>1?'s':''}</div>
+          </div>
+        </div>
+        <div class="inspector-tags">${renderTags(c.tags)}</div>
+        ${c.couple ? `<div class="inspector-couple">💕 Coupled with <strong>${c.couple}</strong></div>` : ''}
+        <div class="inspector-placement ${valid ? 'valid' : 'invalid'}">
+          ${valid ? '✅ Valid placement here' : '❌ Invalid here — scores 0 base pts'}
+        </div>
+        <div class="inspector-valid-hint">💡 Green-highlighted cells = valid spots</div>
+        <div class="inspector-actions">
+          <button class="inspector-btn inspector-swap-btn">🔄 Swap This Card</button>
+          <button class="inspector-btn inspector-close-btn">✕ Close</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    $$('.cell').forEach(cellEl => {
+      const idx = parseInt(cellEl.dataset.index);
+      cellEl.classList.toggle('inspector-valid', validCells.includes(idx));
+      cellEl.classList.toggle('inspector-current', idx === cellIndex);
+    });
+
+    popup.querySelector('.inspector-close-btn').addEventListener('click', () => closeInspector());
+    popup.querySelector('.inspector-swap-btn').addEventListener('click', () => {
+      closeInspector();
+      enterSwapMode(cellIndex);
+    });
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) closeInspector();
+    });
+
+    requestAnimationFrame(() => popup.classList.add('visible'));
+  }
+
+  function closeInspector() {
+    const popup = document.getElementById('inspector-popup');
+    if (popup) {
+      popup.classList.remove('visible');
+      setTimeout(() => popup.remove(), 200);
+    }
+    $$('.cell').forEach(cellEl => {
+      cellEl.classList.remove('inspector-valid', 'inspector-current');
+    });
+  }
+
+  function enterSwapMode(sourceIndex) {
+    swapSourceIndex = sourceIndex;
+    $$('.cell').forEach(cellEl => {
+      const idx = parseInt(cellEl.dataset.index);
+      cellEl.classList.toggle('swap-source', idx === sourceIndex);
+      if (idx !== sourceIndex) cellEl.classList.add('swap-target');
+    });
+    Game.haptic('light');
+  }
+
+  function exitSwapMode() {
+    swapSourceIndex = null;
+    $$('.cell').forEach(cellEl => {
+      cellEl.classList.remove('swap-source', 'swap-target');
+    });
+  }
+
+  // ═══ CELL CLICK HANDLER ═══
+  function handleCellClick(cellIndex) {
+    const state = Game.getState();
+
+    // MODE 1: Draft placement
+    if (selectedDraftIndex >= 0 && state.phase === 'drafting') {
+      Game.draftToCell(selectedDraftIndex, cellIndex);
+      selectedDraftIndex = -1;
+      clearPlacementHints();
+      Game.haptic('medium');
+      return;
+    }
+
+    // MODE 2: Swap completion
+    if (swapSourceIndex !== null) {
+      if (swapSourceIndex !== cellIndex) {
+        Game.swapCells(swapSourceIndex, cellIndex);
+        Game.haptic('medium');
+      }
+      exitSwapMode();
+      return;
+    }
+
+    // MODE 3: Inspect filled cell
+    if (state.board[cellIndex] && (state.phase === 'drafting' || state.phase === 'optimizing')) {
+      showInspector(cellIndex);
+      Game.haptic('light');
+      return;
+    }
+  }
+
+  // ═══ SCORE & UI HELPERS ═══
   function animateScore(sel, val) {
     const el = $(sel);
     const old = parseInt(el.textContent) || 0;
@@ -194,12 +373,9 @@ const UI = (() => {
 
   // ═══ MASTER RENDER ═══
   function render(state) {
-    // Update column 4 header to match today's rotating column
     const col4 = Scoring.getActiveColumn4();
     const col4El = document.getElementById('col4-label');
-    if (col4El) {
-      col4El.innerHTML = `${col4.emoji}<br><span>${col4.label}</span>`;
-    }
+    if (col4El) col4El.innerHTML = `${col4.emoji}<br><span>${col4.label}</span>`;
 
     renderDraft(state);
     renderBoard(state);
@@ -215,44 +391,29 @@ const UI = (() => {
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     const particles = [];
     const colors = ['#f093fb','#ff6b6b','#ffd700','#2ed573','#764ba2','#70a1ff','#ff6b9d','#ffa07a'];
-
     for (let i = 0; i < 120; i++) {
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        w: Math.random() * 8 + 4,
-        h: Math.random() * 4 + 2,
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 8 + 4, h: Math.random() * 4 + 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 4,
-        vy: Math.random() * 3 + 2,
-        rot: Math.random() * Math.PI * 2,
-        rotV: (Math.random() - 0.5) * 0.2,
-        opacity: 1
+        vx: (Math.random() - 0.5) * 4, vy: Math.random() * 3 + 2,
+        rot: Math.random() * Math.PI * 2, rotV: (Math.random() - 0.5) * 0.2, opacity: 1
       });
     }
-
     let frame = 0;
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       let alive = false;
       for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.05;
-        p.rot += p.rotV;
+        p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.rot += p.rotV;
         if (frame > 60) p.opacity -= 0.01;
         if (p.opacity <= 0 || p.y > canvas.height + 50) continue;
         alive = true;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.globalAlpha = Math.max(0, p.opacity);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-        ctx.restore();
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.max(0, p.opacity); ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
       }
       frame++;
       if (alive) requestAnimationFrame(animate);
@@ -261,35 +422,24 @@ const UI = (() => {
     requestAnimationFrame(animate);
   }
 
-  // ═══ SHOW COMPLETION OVERLAY ═══
   function showCompletion(state) {
     const s = state.score;
     $('#final-score').textContent = s.total;
-
-    const parts = [];
-    parts.push(`⭐ Base: ${s.baseTotal}`);
+    const parts = [`⭐ Base: ${s.baseTotal}`];
     if (s.couples.total > 0) parts.push(`💕 Couples: +${s.couples.total}`);
     if (s.seasons.total > 0) parts.push(`🏝️ Seasons: +${s.seasons.total}`);
     if (s.rows.total + s.cols.total > 0) parts.push(`📊 Rows/Cols: +${s.rows.total + s.cols.total}`);
     if (s.perfectGrid.total > 0) parts.push(`✨ Perfect Grid: +${s.perfectGrid.total}`);
     $('#final-breakdown').innerHTML = parts.join('<br>');
-
-    // Check if more games available
     const nextGame = Storage.getNextGameNumber(state.date);
     const nextBtn = $('#btn-next-game');
-    if (nextGame > 0) {
-      nextBtn.classList.remove('hidden');
-      nextBtn.textContent = `Play Game ${nextGame} →`;
-    } else {
-      nextBtn.classList.add('hidden');
-    }
-
+    if (nextGame > 0) { nextBtn.classList.remove('hidden'); nextBtn.textContent = `Play Game ${nextGame} →`; }
+    else { nextBtn.classList.add('hidden'); }
     $('#complete-overlay').classList.remove('hidden');
     launchConfetti();
     Game.haptic('success');
   }
 
-  // ═══ STATS OVERLAY ═══
   function showStats() {
     const stats = Storage.getStats();
     $('#stats-grid').innerHTML = `
@@ -298,21 +448,17 @@ const UI = (() => {
       <div class="stats-item"><div class="stat-number">${stats.averageScore}</div><div class="stat-label">Average</div></div>
       <div class="stats-item"><div class="stat-number">${stats.currentStreak}</div><div class="stat-label">Current Streak</div></div>
       <div class="stats-item"><div class="stat-number">${stats.longestStreak}</div><div class="stat-label">Best Streak</div></div>
-      <div class="stats-item"><div class="stat-number">${stats.perfectGrids}</div><div class="stat-label">Perfect Grids</div></div>
-    `;
+      <div class="stats-item"><div class="stat-number">${stats.perfectGrids}</div><div class="stat-label">Perfect Grids</div></div>`;
     $('#stats-overlay').classList.remove('hidden');
   }
 
-  // ═══ ALL DONE TODAY ═══
   function showAllDone() {
     const progress = Storage.getDailyProgress();
     let html = '';
     for (let g = 1; g <= 3; g++) {
       const gk = 'game' + g;
       const data = progress[gk];
-      if (data && data.completed) {
-        html += `<div class="today-score-item"><span class="today-score-label">Game ${g}</span><span class="today-score-value">${data.score} pts</span></div>`;
-      }
+      if (data && data.completed) html += `<div class="today-score-item"><span class="today-score-label">Game ${g}</span><span class="today-score-value">${data.score} pts</span></div>`;
     }
     const totalToday = (progress.game1?.score || 0) + (progress.game2?.score || 0) + (progress.game3?.score || 0);
     html += `<div class="today-score-item"><span class="today-score-label"><strong>Total</strong></span><span class="today-score-value"><strong>${totalToday} pts</strong></span></div>`;
@@ -322,31 +468,15 @@ const UI = (() => {
 
   // ═══ SETUP EVENT LISTENERS ═══
   function setupEvents() {
-    // Confirm draft pick
-    $('#btn-confirm').addEventListener('click', () => {
-      if (selectedDraftIndex >= 0) {
-        Game.draftContestant(selectedDraftIndex);
-        selectedDraftIndex = -1;
-        Game.haptic('medium');
-      }
-    });
-
-    // Board cell clicks (swap)
     $$('.cell').forEach(cellEl => {
-      cellEl.addEventListener('click', () => {
-        const index = parseInt(cellEl.dataset.index);
-        Game.selectCell(index);
-        Game.haptic('light');
-      });
+      cellEl.addEventListener('click', () => handleCellClick(parseInt(cellEl.dataset.index)));
     });
 
-    // Finish button (optimization phase)
     $('#btn-finish').addEventListener('click', () => {
-      const result = Game.completeGame();
+      Game.completeGame();
       showCompletion(Game.getState());
     });
 
-    // Share button
     $('#btn-share').addEventListener('click', async () => {
       await Game.shareResults();
       const toast = $('#share-toast');
@@ -354,103 +484,51 @@ const UI = (() => {
       setTimeout(() => toast.classList.add('hidden'), 2000);
     });
 
-    // Next game button
     $('#btn-next-game').addEventListener('click', () => {
       const nextGame = Storage.getNextGameNumber(Storage.todayStr());
-      if (nextGame > 0) {
-        $('#complete-overlay').classList.add('hidden');
-        startGame(nextGame);
-      }
+      if (nextGame > 0) { $('#complete-overlay').classList.add('hidden'); startGame(nextGame); }
     });
 
-    // Game tabs
     $$('.game-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         if (tab.classList.contains('locked')) return;
         const gn = parseInt(tab.dataset.game);
         const progress = Storage.getDailyProgress();
-        const gk = 'game' + gn;
-        if (progress[gk] && progress[gk].completed) return; // Already done
+        if (progress['game'+gn] && progress['game'+gn].completed) return;
         startGame(gn);
       });
     });
 
-    // Stats button
     $('#btn-stats').addEventListener('click', () => showStats());
-
-    // Help button
-    $('#btn-help').addEventListener('click', () => {
-      $('#help-overlay').classList.remove('hidden');
-    });
-
-    // Close overlay buttons
-    $$('.close-overlay').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.closest('.overlay').classList.add('hidden');
-      });
-    });
-
-    // Close overlays by clicking backdrop
-    $$('.overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) overlay.classList.add('hidden');
-      });
-    });
+    $('#btn-help').addEventListener('click', () => $('#help-overlay').classList.remove('hidden'));
+    $$('.close-overlay').forEach(btn => { btn.addEventListener('click', () => btn.closest('.overlay').classList.add('hidden')); });
+    $$('.overlay').forEach(o => { o.addEventListener('click', (e) => { if (e.target === o) o.classList.add('hidden'); }); });
   }
 
-  // ═══ START GAME ═══
   function startGame(gameNumber) {
-    const date = Storage.todayStr();
-    Game.initGame(contestantsDB, gameNumber, date);
+    Game.initGame(contestantsDB, gameNumber, Storage.todayStr());
   }
 
-  // ═══ INITIALIZE ═══
   async function init() {
-    // Load contestant database — use embedded data if available, else fetch
     try {
-      if (window.CONTESTANTS_DATA) {
-        contestantsDB = window.CONTESTANTS_DATA;
-      } else {
-        const resp = await fetch('data/contestants.json');
-        contestantsDB = await resp.json();
-      }
-    } catch (e) {
-      console.error('[Recouple] Failed to load contestants:', e);
-      return;
-    }
+      if (window.CONTESTANTS_DATA) { contestantsDB = window.CONTESTANTS_DATA; }
+      else { const resp = await fetch('data/contestants.json'); contestantsDB = await resp.json(); }
+    } catch (e) { console.error('[Recouple] Failed to load contestants:', e); return; }
     console.log('[Recouple] Loaded', contestantsDB.length, 'contestants');
 
-    // Connect game state changes to render
     Game.setOnStateChange(render);
-
-    // Setup all event listeners
     setupEvents();
 
-    // Try to resume a saved game
-    if (Game.tryResume()) {
-      return; // Resumed successfully
-    }
+    if (Game.tryResume()) return;
 
-    // Check what game to play today
     const today = Storage.todayStr();
     const nextGame = Storage.getNextGameNumber(today);
-    
-    if (nextGame === 0) {
-      // All games done today
-      // Show a default state then the all-done overlay
-      Game.initGame(contestantsDB, 1, today);
-      showAllDone();
-    } else {
-      startGame(nextGame);
-    }
+    if (nextGame === 0) { Game.initGame(contestantsDB, 1, today); showAllDone(); }
+    else { startGame(nextGame); }
   }
 
-  // Start when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
 
   return { init, render, showStats, showCompletion, launchConfetti };
 })();
