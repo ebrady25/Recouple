@@ -523,8 +523,6 @@ const UI = (() => {
       tab.addEventListener('click', () => {
         if (tab.classList.contains('locked')) return;
         const gn = parseInt(tab.dataset.game);
-        const progress = Storage.getDailyProgress();
-        if (progress['game'+gn] && progress['game'+gn].completed) return;
         startGame(gn);
       });
     });
@@ -567,8 +565,7 @@ const UI = (() => {
 
     const today = Storage.todayStr();
     const nextGame = Storage.getNextGameNumber(today);
-    if (nextGame === 0) { Game.initGame(contestantsDB, 1, today); showAllDone(); }
-    else { startGame(nextGame); }
+    startGame(nextGame);
   }
 
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
