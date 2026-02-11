@@ -52,7 +52,7 @@ const UI = (() => {
 
   function getVisibleTags(tags) {
     const col4 = Scoring.getActiveColumn4();
-    const relevant = ['usa', 'uk', 'winner', 'coupled', 'casa', 'finale', col4.tag];
+    const relevant = ['winner', 'coupled', 'casa', 'finale', col4.tag];
     return tags.filter(t => relevant.includes(t));
   }
 
