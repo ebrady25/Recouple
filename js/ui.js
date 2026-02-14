@@ -242,17 +242,13 @@ const UI = (() => {
     const seasonShort = c.season.replace('USA ', 'S').replace('UK ', 'S');
     const selected = index === selectedDraftIndex;
 
-    // Show relevant tags (skip usa/uk since flag covers it)
-    const slotLabels = Scoring.getSlotLabels();
-    const slotTags = Scoring.SLOT_TAGS;
-    const relevantTags = c.tags.filter(t => t !== 'usa' && t !== 'uk' && slotTags.includes(t));
-
+    // Show only the 4 gameplay-relevant tags (skip usa/uk since flag covers it)
     const TAG_DISPLAY = {
-      winner: '👑', coupled: '💑', casa: '🏠', finale: '🏆',
-      season6: '6️⃣', og_era: '🕰️', bombshell: '💣', day1: '☀️'
+      bombshell: '💣', casa: '🏠'
     };
 
-    const tagPills = relevantTags.map(t => `<span class="dtag">${TAG_DISPLAY[t] || t}</span>`).join('');
+    const relevantTags = c.tags.filter(t => TAG_DISPLAY[t]);
+    const tagPills = relevantTags.map(t => `<span class="dtag">${TAG_DISPLAY[t]}</span>`).join('');
 
     return `
       <div class="draft-card ${stars.cls} ${selected ? 'card-selected' : ''}" data-index="${index}">
@@ -304,7 +300,6 @@ const UI = (() => {
           <span>🎯 Slots: ${score.totalSlot}</span>
           <span>⭐ Rarity: ${score.totalRarity}</span>
           <span>🔗 Connections: ${score.totalConnections}</span>
-          ${score.gridBonus > 0 ? `<span>✨ Perfect: +${score.gridBonus}</span>` : ''}
           ${coupleCount > 0 ? `<span>💕 Couples: ${coupleCount}</span>` : ''}
         </div>
         <div class="completion-buttons">
@@ -354,7 +349,6 @@ const UI = (() => {
         <div class="sb-item"><span class="sb-label">🎯 Slots</span><span class="sb-val">${s.totalSlot}</span></div>
         <div class="sb-item"><span class="sb-label">⭐ Rarity</span><span class="sb-val">${s.totalRarity}</span></div>
         <div class="sb-item"><span class="sb-label">🔗 Links</span><span class="sb-val">${s.totalConnections}</span></div>
-        ${s.gridBonus > 0 ? `<div class="sb-item sb-bonus"><span class="sb-label">✨ Perfect</span><span class="sb-val">+${s.gridBonus}</span></div>` : ''}
       </div>
     `;
   }
@@ -490,7 +484,7 @@ const UI = (() => {
         <div class="insp-header"><div class="insp-name">How to Play</div></div>
         <div class="help-content">
           <p><strong>Draft</strong> 9 Love Island contestants over 9 rounds (pick 1 of 3).</p>
-          <p><strong>Place</strong> them on the board — each slot has a trait. Match the trait for +2 points. 🃏 Wild slots accept anyone but give 0 slot pts.</p>
+          <p><strong>Place</strong> them on the board — 🇺🇸 USA, 🇬🇧 UK, 💣 Bombshell, and 🏠 Casa slots give +2pts if matched. 🃏 Wild slots accept anyone but give 0 slot pts.</p>
           <p><strong>Connect</strong> for bonus points! Cards linked by lines score:</p>
           <ul>
             <li>🌍 Same country: +2 each</li>
@@ -499,9 +493,8 @@ const UI = (() => {
             <li>💕 Real couple: +4 each</li>
           </ul>
           <p><strong>Stars</strong> add bonus: ★=0, ★★=+1, ★★★=+2, ★★★★=+3</p>
-          <p><strong>Perfect board</strong> (all non-wild slots matched): +6 bonus</p>
-          <p>🇺🇸 and 🇬🇧 slots have 5 connections — they're the power positions!</p>
-          <p class="help-rotate">Your score shows a % of optimal — 100% means perfect placement!</p>
+          <p>🇺🇸 and 🇬🇧 are power positions with 5 connections each!</p>
+          <p class="help-rotate">Your % shows how close you are to the best possible arrangement!</p>
         </div>
         <button class="insp-close">Got It</button>
       </div>
