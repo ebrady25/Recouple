@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recouple-v2';
+const CACHE_NAME = 'recouple-v4';
 const ASSETS = [
   '/',
   '/index.html',
