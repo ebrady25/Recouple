@@ -129,7 +129,7 @@ const Scoring = (() => {
 
         const conn = { neighborIndex: ni, neighborName: nc.name, points: 0, types: [] };
         const sameCountry = c.show === nc.show;
-        const sameSeason = c.season === nc.season;
+        const sameSeason = c.seasonNum === nc.seasonNum;
         const isCouple = (c.couple && c.couple === nc.name) || (nc.couple && nc.couple === c.name);
 
         if (sameCountry && sameSeason) {
@@ -192,7 +192,7 @@ const Scoring = (() => {
     for (const [a, b] of EDGES) {
       const ca = board[a], cb = board[b];
       if (!ca || !cb) continue;
-      const sc = ca.show === cb.show, ss = ca.season === cb.season;
+      const sc = ca.show === cb.show, ss = ca.seasonNum === cb.seasonNum;
       let e = 0;
       if (sc && ss) e = COUNTRY_MATCH_PTS + SEASON_MATCH_PTS + COUNTRY_SEASON_COMBO;
       else { if (sc) e += COUNTRY_MATCH_PTS; if (ss) e += SEASON_MATCH_PTS; }
