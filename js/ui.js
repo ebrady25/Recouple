@@ -105,7 +105,7 @@ const UI = (() => {
         const stars = RARITY[c.stars];
         const [c1, c2] = getAvatarColor(c.name);
         const flag = c.show === 'usa' ? '🇺🇸' : '🇬🇧';
-        const seasonShort = c.season.replace('USA ', 'S').replace('UK ', 'S');
+        const seasonShort = c.season.replace('USA S', 'S').replace('UK S', 'S');
         const totalPts = cs.totalPoints;
 
         cellClass += valid ? ' cell-valid' : ' cell-invalid';
@@ -247,7 +247,7 @@ const UI = (() => {
     const stars = RARITY[c.stars];
     const [c1, c2] = getAvatarColor(c.name);
     const flag = c.show === 'usa' ? '🇺🇸' : '🇬🇧';
-    const seasonShort = c.season.replace('USA ', 'S').replace('UK ', 'S');
+    const seasonShort = c.season.replace('USA S', 'S').replace('UK S', 'S');
     const selected = index === selectedDraftIndex;
 
     // Show only the 4 gameplay-relevant tags (skip usa/uk since flag covers it)
