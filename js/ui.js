@@ -226,10 +226,18 @@ const UI = (() => {
       </div>
     `;
 
-    // Attach card click handlers
+    // Attach card click handlers with double-tap detection
+    const draftTapTime = {};
     draftEl.querySelectorAll('.draft-card').forEach(card => {
       card.addEventListener('click', () => {
         const idx = parseInt(card.dataset.index);
+        const now = Date.now();
+        if (draftTapTime[idx] && (now - draftTapTime[idx]) < 400) {
+          draftTapTime[idx] = 0;
+          showDraftInspector(options[idx]);
+          return;
+        }
+        draftTapTime[idx] = now;
         selectDraftCard(idx);
       });
     });
@@ -355,6 +363,62 @@ const UI = (() => {
 
   // ═══ INSPECTOR POPUP ═══
 
+  function showDraftInspector(c) {
+    if (!c) return;
+
+    const TAG_NAMES = {
+      usa:'🇺🇸 USA', uk:'🇬🇧 UK', bombshell:'💣 Bombshell', casa:'🏠 Casa Amor',
+      winner:'👑 Winner', coupled:'💑 Coupled', finale:'🏆 Finale',
+      day1:'☀️ Day 1', season6:'6️⃣ S6+', og_era:'🕰️ OG Era'
+    };
+    const displayTags = Scoring.DISPLAY_TAGS || ['usa','uk','bombshell','casa'];
+    const tagList = c.tags.filter(t => TAG_NAMES[t]).map(t => TAG_NAMES[t]).join(' · ');
+
+    // Show which slots this contestant can validly fill
+    const slotLabels = Scoring.getSlotLabels();
+    let slotsHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const sl = slotLabels[i];
+      if (sl.tag === null) continue; // skip WILD
+      const valid = c.tags.includes(sl.tag);
+      if (valid) {
+        slotsHTML += `<span class="insp-slot-badge insp-valid">${sl.emoji} ${sl.label} +2</span>`;
+      }
+    }
+    if (!slotsHTML) {
+      slotsHTML = '<span class="insp-slot-badge insp-none-badge">Wild slots only</span>';
+    }
+
+    const stars = '★'.repeat(c.stars);
+    const [c1, c2] = getAvatarColor(c.name);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'inspector-overlay';
+    overlay.innerHTML = `
+      <div class="inspector-card">
+        <div class="insp-header">
+          <div class="dcard-avatar" style="background:linear-gradient(135deg,${c1},${c2});width:56px;height:56px;margin:0 auto 8px;border:3px solid rgba(255,255,255,0.3)">
+            <span style="font-size:18px">${getInitials(c.name)}</span>
+          </div>
+          <div class="insp-name">${c.name}</div>
+          <div class="insp-season">${c.season} · ${stars}</div>
+        </div>
+        <div class="insp-tags">${tagList}</div>
+        ${c.couple ? `<div class="insp-couple">💕 Couple: ${c.couple}</div>` : ''}
+        <div class="insp-section-label">Valid Placements</div>
+        <div class="insp-slots-row">${slotsHTML}</div>
+        <button class="insp-close">Close</button>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target.classList.contains('insp-close')) {
+        overlay.remove();
+      }
+    });
+  }
+
   function showInspector(slotIndex) {
     const state = Game.getState();
     const c = state.board[slotIndex];
@@ -384,11 +448,11 @@ const UI = (() => {
 
     // All tags
     const TAG_NAMES = {
-      usa:'🇺🇸 USA', uk:'🇬🇧 UK', winner:'👑 Winner', coupled:'💑 Coupled',
-      casa:'🏠 Casa', finale:'🏆 Finale', season6:'6️⃣ S6+', og_era:'🕰️ OG Era',
-      bombshell:'💣 Bombshell', day1:'☀️ Day 1'
+      usa:'🇺🇸 USA', uk:'🇬🇧 UK', bombshell:'💣 Bombshell', casa:'🏠 Casa Amor',
+      winner:'👑 Winner', coupled:'💑 Coupled', finale:'🏆 Finale',
+      day1:'☀️ Day 1'
     };
-    const tagList = c.tags.map(t => TAG_NAMES[t] || t).join(' · ');
+    const tagList = c.tags.filter(t => TAG_NAMES[t]).map(t => TAG_NAMES[t]).join(' · ');
 
     const overlay = document.createElement('div');
     overlay.className = 'inspector-overlay';
