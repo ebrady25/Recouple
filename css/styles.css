@@ -79,7 +79,7 @@ body {
 .sb-bonus .sb-val { color: var(--gold); }
 
 /* Draft */
-#draft-container { padding: 8px 12px 16px; }
+#draft-container { padding: 16px 12px 16px; margin-top: 12px; }
 .draft-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 4px; }
 .draft-round { font-size: 13px; font-weight: 700; color: var(--coral); }
 .draft-prompt { font-size: 12px; color: var(--text-dim); }
